@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMART BBMP - Bruhat Bengaluru Mahanagara Palike</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img src="images/bbmp-logo.png" alt="BBMP Logo" class="logo-img">
+                    <div class="logo-text">
+                        <h2>SMART BBMP</h2>
+                        <p>Digital Bengaluru</p>
+                    </div>
+                </div>
+                <div class="nav-menu" id="nav-menu">
+                    <a href="#home" class="nav-link">Home</a>
+                    <a href="#services" class="nav-link">Services</a>
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                    <a href="pages/citizen-login.html" class="nav-link login-btn">Citizen Login</a>
+                </div>
+                <div class="nav-toggle" id="nav-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="highlight">SMART</span> Waste Management
+                </h1>
+                <p class="hero-subtitle">
+                    AI-Powered Garbage Collection & Route Optimization for Clean Bengaluru
+                </p>
+                <div class="hero-buttons">
+                    <a href="pages/report-garbage.html" class="btn btn-primary">
+                        <i class="fas fa-camera"></i> Report Garbage
+                    </a>
+                    <a href="pages/admin-dashboard.html" class="btn btn-secondary">
+                        <i class="fas fa-map-marked-alt"></i> View Heatmap
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-card">
+                    <i class="fas fa-recycle"></i>
+                    <h3>Clean City</h3>
+                    <p>Smart waste collection for sustainable Bengaluru</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Services -->
+    <section class="quick-services">
+        <div class="container">
+            <h2 class="section-title">Waste Management Services</h2>
+            <div class="services-grid">
+                <div class="service-card" data-service="report-garbage">
+                    <div class="service-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3>Report Garbage</h3>
+                    <p>Upload photos and location of garbage spots</p>
+                    <a href="pages/report-garbage.html" class="service-link">Report Now</a>
+                </div>
+                <div class="service-card" data-service="track-collection">
+                    <div class="service-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3>Track Collection</h3>
+                    <p>Monitor garbage collection schedule in your area</p>
+                    <a href="pages/track-collection.html" class="service-link">Track Status</a>
+                </div>
+                <div class="service-card" data-service="route-optimization">
+                    <div class="service-icon">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <h3>Route Optimization</h3>
+                    <p>AI-powered optimal collection routes</p>
+                    <a href="pages/admin-dashboard.html" class="service-link">View Routes</a>
+                </div>
+                <div class="service-card" data-service="heatmap-analysis">
+                    <div class="service-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3>Garbage Heatmap</h3>
+                    <p>Visual analytics of waste concentration areas</p>
+                    <a href="pages/admin-dashboard.html" class="service-link">View Heatmap</a>
+                </div>
+                <div class="service-card" data-service="collection-schedule">
+                    <div class="service-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>Collection Schedule</h3>
+                    <p>Manage and view collection timings</p>
+                    <a href="pages/collection-schedule.html" class="service-link">View Schedule</a>
+                </div>
+                <div class="service-card" data-service="waste-analytics">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Waste Analytics</h3>
+                    <p>Data insights and collection statistics</p>
+                    <a href="pages/analytics.html" class="service-link">View Analytics</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Smart Initiatives -->
+    <section id="services" class="smart-initiatives">
+        <div class="container">
+            <h2 class="section-title">Smart Waste Management Features</h2>
+            <div class="initiatives-grid">
+                <div class="initiative-card">
+                    <div class="initiative-image">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <div class="initiative-content">
+                        <h3>Real-time Garbage Heatmap</h3>
+                        <p>Interactive visualization of waste concentration across Bengaluru</p>
+                        <ul>
+                            <li>Live garbage hotspot tracking</li>
+                            <li>Citizen reporting integration</li>
+                            <li>Priority zone identification</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="initiative-card">
+                    <div class="initiative-image">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <div class="initiative-content">
+                        <h3>AI Route Optimization</h3>
+                        <p>Machine learning algorithms for efficient collection routes</p>
+                        <ul>
+                            <li>Dynamic route planning</li>
+                            <li>Traffic-aware optimization</li>
+                            <li>Fuel efficiency maximization</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="initiative-card">
+                    <div class="initiative-image">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="initiative-content">
+                        <h3>Mobile Garbage Reporting</h3>
+                        <p>Easy citizen reporting with GPS and photo upload</p>
+                        <ul>
+                            <li>One-click photo capture</li>
+                            <li>Automatic location tagging</li>
+                            <li>Real-time status updates</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics -->
+    <section class="statistics">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="25000">0</div>
+                    <div class="stat-label">Garbage Reports</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="500">0</div>
+                    <div class="stat-label">Collection Trucks</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="1200">0</div>
+                    <div class="stat-label">Daily Collections</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="85">0</div>
+                    <div class="stat-label">% Route Efficiency</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>About SMART Waste Management</h2>
+                    <p>
+                        BBMP's revolutionary waste management system leverages cutting-edge AI and IoT technologies 
+                        to optimize garbage collection routes, reduce operational costs, and maintain city cleanliness.
+                    </p>
+                    <p>
+                        Our citizen-centric approach allows real-time garbage reporting with photo uploads and GPS location, 
+                        enabling data-driven decision making for efficient waste collection across Bengaluru.
+                    </p>
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Real-time Garbage Tracking</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>AI-Powered Route Optimization</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Citizen Photo Reporting</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Interactive Heatmap Analytics</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="about-card">
+                        <h3>Clean Bengaluru 2030</h3>
+                        <p>Making Bengaluru the cleanest smart city in India</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Address</h4>
+                            <p>BBMP Head Office<br>N.R. Square, Bengaluru - 560002</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>Phone</h4>
+                            <p>080-22212233<br>1912 (Helpline)</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>info@bbmp.gov.in<br>support@smartbbmp.in</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h4>Working Hours</h4>
+                            <p>Mon - Fri: 9:30 AM - 5:30 PM<br>Sat: 9:30 AM - 1:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <input type="text" id="name" name="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="phone" name="phone" placeholder="Your Phone">
+                        </div>
+                        <div class="form-group">
+                            <textarea id="message" name="message" placeholder="Your Message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <h3>SMART BBMP</h3>
+                        <p>Digital Bengaluru Initiative</p>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="pages/property-tax.html">Property Tax</a></li>
+                        <li><a href="pages/trade-license.html">Trade License</a></li>
+                        <li><a href="pages/birth-certificate.html">Birth Certificate</a></li>
+                        <li><a href="pages/building-permit.html">Building Permit</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Important Links</h4>
+                    <ul>
+                        <li><a href="#">RTI Portal</a></li>
+                        <li><a href="#">Grievance Portal</a></li>
+                        <li><a href="#">Tender Notices</a></li>
+                        <li><a href="#">Public Notices</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 BBMP. All rights reserved. | Developed for Digital India Initiative</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

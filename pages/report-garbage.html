@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Garbage - SMART BBMP</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        .report-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 120px 0 60px;
+            text-align: center;
+        }
+        .report-content {
+            padding: 60px 0;
+            background: var(--light-gray);
+        }
+        .report-form {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        .camera-section {
+            border: 2px dashed var(--gray-color);
+            padding: 2rem;
+            text-align: center;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            background: var(--light-gray);
+            margin-bottom: 1.5rem;
+        }
+        .camera-section.active {
+            border-color: var(--primary-color);
+            background: rgba(44, 90, 160, 0.05);
+        }
+        .map-container {
+            height: 300px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ddd;
+        }
+        .photo-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .photo-item {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background: #f5f5f5;
+        }
+        .photo-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        .photo-remove {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .location-info {
+            background: var(--light-gray);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+        }
+        .priority-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .priority-option {
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .priority-option.selected {
+            border-color: var(--primary-color);
+            background: rgba(44, 90, 160, 0.1);
+        }
+        .priority-low { border-left: 4px solid #28a745; }
+        .priority-medium { border-left: 4px solid #ffc107; }
+        .priority-high { border-left: 4px solid #dc3545; }
+        @media (max-width: 768px) {
+            .priority-selector {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img src="../images/bbmp-logo.png" alt="BBMP Logo" class="logo-img">
+                    <div class="logo-text">
+                        <h2>SMART BBMP</h2>
+                        <p>Waste Management</p>
+                    </div>
+                </div>
+                <div class="nav-menu">
+                    <a href="../index.html" class="nav-link">Home</a>
+                    <a href="../index.html#services" class="nav-link">Services</a>
+                    <a href="admin-dashboard.html" class="nav-link">Heatmap</a>
+                    <a href="../index.html#contact" class="nav-link">Contact</a>
+                    <a href="citizen-login.html" class="nav-link login-btn">Login</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Report Header -->
+    <section class="report-header">
+        <div class="container">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+                <i class="fas fa-camera" style="font-size: 3rem;"></i>
+                <h1>Report Garbage</h1>
+            </div>
+            <p>Help keep Bengaluru clean by reporting garbage in your area</p>
+            <div style="margin-top: 2rem;">
+                <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; margin: 0 0.5rem;">
+                    <i class="fas fa-camera"></i> Photo Upload
+                </span>
+                <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; margin: 0 0.5rem;">
+                    <i class="fas fa-map-marker-alt"></i> GPS Location
+                </span>
+                <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; margin: 0 0.5rem;">
+                    <i class="fas fa-bolt"></i> Instant Tracking
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Report Content -->
+    <section class="report-content">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start;">
+                <!-- Main Form -->
+                <div>
+                    <div class="report-form">
+                        <h2 style="color: var(--primary-color); margin-bottom: 1.5rem;">
+                            <i class="fas fa-exclamation-triangle"></i> New Garbage Report
+                        </h2>
+                        
+                        <form id="garbageReportForm">
+                            <!-- Photo Upload Section -->
+                            <div class="form-section">
+                                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                                    <i class="fas fa-camera"></i> Upload Photos
+                                </h3>
+                                <div class="camera-section" id="cameraSection">
+                                    <i class="fas fa-camera" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                                    <h4>Take or Upload Photos</h4>
+                                    <p style="margin-bottom: 1.5rem; color: var(--gray-color);">
+                                        Capture clear images of the garbage location
+                                    </p>
+                                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                                        <button type="button" class="btn btn-primary" onclick="capturePhoto()">
+                                            <i class="fas fa-camera"></i> Take Photo
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" onclick="uploadPhoto()">
+                                            <i class="fas fa-upload"></i> Upload Photo
+                                        </button>
+                                    </div>
+                                    <input type="file" id="photoInput" accept="image/*" multiple capture="camera" style="display: none;" onchange="handlePhotoUpload(this)">
+                                </div>
+                                <div id="photoPreview" class="photo-preview"></div>
+                            </div>
+
+                            <!-- Location Section -->
+                            <div class="form-section">
+                                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                                    <i class="fas fa-map-marker-alt"></i> Location Details
+                                </h3>
+                                <div class="location-info" id="locationInfo">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                        <i class="fas fa-spinner fa-spin" id="locationSpinner"></i>
+                                        <span>Getting your location...</span>
+                                    </div>
+                                </div>
+                                <div class="map-container" id="mapContainer"></div>
+                                <button type="button" class="btn btn-secondary" onclick="getCurrentLocation()" style="margin-bottom: 1rem; width: 100%;">
+                                    <i class="fas fa-crosshairs"></i> Refresh Location
+                                </button>
+                            </div>
+
+                            <!-- Priority Level -->
+                            <div class="form-section">
+                                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                                    <i class="fas fa-exclamation-circle"></i> Priority Level
+                                </h3>
+                                <div class="priority-selector">
+                                    <div class="priority-option priority-low" data-priority="low">
+                                        <i class="fas fa-leaf" style="color: #28a745; font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                        <h4>Low Priority</h4>
+                                        <p style="font-size: 0.9rem; color: var(--gray-color);">Regular cleanup needed</p>
+                                    </div>
+                                    <div class="priority-option priority-medium" data-priority="medium">
+                                        <i class="fas fa-exclamation-triangle" style="color: #ffc107; font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                        <h4>Medium Priority</h4>
+                                        <p style="font-size: 0.9rem; color: var(--gray-color);">Moderate accumulation</p>
+                                    </div>
+                                    <div class="priority-option priority-high" data-priority="high">
+                                        <i class="fas fa-fire" style="color: #dc3545; font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+                                        <h4>High Priority</h4>
+                                        <p style="font-size: 0.9rem; color: var(--gray-color);">Urgent attention needed</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Additional Details -->
+                            <div class="form-section">
+                                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                                    <i class="fas fa-info-circle"></i> Additional Details
+                                </h3>
+                                <div class="form-group">
+                                    <label>Garbage Type</label>
+                                    <select name="garbageType" required>
+                                        <option value="">Select garbage type</option>
+                                        <option value="household">Household Waste</option>
+                                        <option value="construction">Construction Debris</option>
+                                        <option value="plastic">Plastic Waste</option>
+                                        <option value="organic">Organic Waste</option>
+                                        <option value="electronic">Electronic Waste</option>
+                                        <option value="medical">Medical Waste</option>
+                                        <option value="mixed">Mixed Waste</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Estimated Size</label>
+                                    <select name="estimatedSize">
+                                        <option value="">Select estimated size</option>
+                                        <option value="small">Small (1-2 bags)</option>
+                                        <option value="medium">Medium (3-5 bags)</option>
+                                        <option value="large">Large (6-10 bags)</option>
+                                        <option value="very-large">Very Large (10+ bags)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Description (Optional)</label>
+                                    <textarea name="description" placeholder="Provide additional details about the garbage location or conditions" rows="3"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Contact Information -->
+                            <div class="form-section">
+                                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                                    <i class="fas fa-user"></i> Contact Information
+                                </h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <div class="form-group">
+                                        <label>Your Name</label>
+                                        <input type="text" name="reporterName" placeholder="Enter your name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Mobile Number</label>
+                                        <input type="tel" name="mobile" placeholder="Enter mobile number">
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <input type="checkbox" name="anonymous">
+                                        <span>Report anonymously</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem;">
+                                <i class="fas fa-paper-plane"></i> Submit Garbage Report
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div>
+                    <!-- Live Stats -->
+                    <div class="report-form">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                            <i class="fas fa-chart-line"></i> Live Statistics
+                        </h3>
+                        <div style="text-align: center;">
+                            <div style="margin-bottom: 1rem;">
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--secondary-color);" id="todayReports">127</div>
+                                <div style="color: var(--gray-color);">Reports Today</div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--success-color);" id="resolvedToday">89</div>
+                                <div style="color: var(--gray-color);">Resolved Today</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 2rem; font-weight: bold; color: var(--primary-color);" id="responseTime">2.5</div>
+                                <div style="color: var(--gray-color);">Avg Response (hours)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Reports -->
+                    <div class="report-form">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                            <i class="fas fa-clock"></i> Recent Reports
+                        </h3>
+                        <div id="recentReports">
+                            <div style="padding: 0.75rem; border-left: 3px solid #28a745; margin-bottom: 0.75rem; background: var(--light-gray);">
+                                <div style="font-weight: 500;">Indiranagar</div>
+                                <div style="font-size: 0.9rem; color: var(--gray-color);">5 min ago - Resolved</div>
+                            </div>
+                            <div style="padding: 0.75rem; border-left: 3px solid #ffc107; margin-bottom: 0.75rem; background: var(--light-gray);">
+                                <div style="font-weight: 500;">Koramangala</div>
+                                <div style="font-size: 0.9rem; color: var(--gray-color);">12 min ago - In Progress</div>
+                            </div>
+                            <div style="padding: 0.75rem; border-left: 3px solid #dc3545; margin-bottom: 0.75rem; background: var(--light-gray);">
+                                <div style="font-weight: 500;">Jayanagar</div>
+                                <div style="font-size: 0.9rem; color: var(--gray-color);">18 min ago - High Priority</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Tips -->
+                    <div class="report-form">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                            <i class="fas fa-lightbulb"></i> Reporting Tips
+                        </h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 0.75rem; display: flex; align-items: start; gap: 0.5rem;">
+                                <i class="fas fa-check" style="color: var(--success-color); margin-top: 0.25rem;"></i>
+                                <span style="font-size: 0.9rem;">Take clear, well-lit photos</span>
+                            </li>
+                            <li style="margin-bottom: 0.75rem; display: flex; align-items: start; gap: 0.5rem;">
+                                <i class="fas fa-check" style="color: var(--success-color); margin-top: 0.25rem;"></i>
+                                <span style="font-size: 0.9rem;">Ensure GPS location is accurate</span>
+                            </li>
+                            <li style="margin-bottom: 0.75rem; display: flex; align-items: start; gap: 0.5rem;">
+                                <i class="fas fa-check" style="color: var(--success-color); margin-top: 0.25rem;"></i>
+                                <span style="font-size: 0.9rem;">Select appropriate priority level</span>
+                            </li>
+                            <li style="display: flex; align-items: start; gap: 0.5rem;">
+                                <i class="fas fa-check" style="color: var(--success-color); margin-top: 0.25rem;"></i>
+                                <span style="font-size: 0.9rem;">Provide detailed description</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (simplified) -->
+    <footer class="footer">
+        <div class="container">
+            <div style="text-align: center; padding: 2rem 0;">
+                <p>&copy; 2024 BBMP. All rights reserved. | <a href="../index.html" style="color: var(--accent-color);">Back to Home</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        let map;
+        let marker;
+        let currentLocation = null;
+        let uploadedPhotos = [];
+        let selectedPriority = null;
+
+        // Initialize map and get location on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMap();
+            getCurrentLocation();
+            setupPrioritySelection();
+            updateLiveStats();
+            setInterval(updateLiveStats, 30000); // Update every 30 seconds
+        });
+
+        // Initialize Leaflet map
+        function initializeMap() {
+            map = L.map('mapContainer').setView([12.9716, 77.5946], 13); // Bengaluru coordinates
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        }
+
+        // Get current location
+        function getCurrentLocation() {
+            const locationInfo = document.getElementById('locationInfo');
+            const spinner = document.getElementById('locationSpinner');
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lng = position.coords.longitude;
+                        currentLocation = { lat, lng };
+                        
+                        // Update map
+                        map.setView([lat, lng], 16);
+                        
+                        // Add or update marker
+                        if (marker) {
+                            map.removeLayer(marker);
+                        }
+                        marker = L.marker([lat, lng]).addTo(map);
+                        
+                        // Update location info
+                        locationInfo.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-map-marker-alt" style="color: var(--success-color);"></i>
+                                <span style="font-weight: 500;">Location Found</span>
+                            </div>
+                            <div style="font-size: 0.9rem; color: var(--gray-color);">
+                                Coordinates: ${lat.toFixed(6)}, ${lng.toFixed(6)}
+                            </div>
+                        `;
+                        
+                        // Reverse geocoding (simplified)
+                        fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=YOUR_API_KEY`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.results && data.results[0]) {
+                                    const address = data.results[0].formatted;
+                                    locationInfo.innerHTML += `
+                                        <div style="font-size: 0.9rem; color: var(--dark-color); margin-top: 0.5rem;">
+                                            <strong>Address:</strong> ${address}
+                                        </div>
+                                    `;
+                                }
+                            })
+                            .catch(() => {
+                                // Fallback address display
+                                locationInfo.innerHTML += `
+                                    <div style="font-size: 0.9rem; color: var(--dark-color); margin-top: 0.5rem;">
+                                        <strong>Address:</strong> Location detected in Bengaluru
+                                    </div>
+                                `;
+                            });
+                    },
+                    function(error) {
+                        locationInfo.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--danger-color);">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>Unable to get location. Please enable GPS.</span>
+                            </div>
+                        `;
+                    }
+                );
+            } else {
+                locationInfo.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--danger-color);">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Geolocation not supported by this browser.</span>
+                    </div>
+                `;
+            }
+        }
+
+        // Photo upload functions
+        function capturePhoto() {
+            const input = document.getElementById('photoInput');
+            input.setAttribute('capture', 'camera');
+            input.click();
+        }
+
+        function uploadPhoto() {
+            const input = document.getElementById('photoInput');
+            input.removeAttribute('capture');
+            input.click();
+        }
+
+        function handlePhotoUpload(input) {
+            const files = Array.from(input.files);
+            const preview = document.getElementById('photoPreview');
+            
+            files.forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const photoItem = document.createElement('div');
+                        photoItem.className = 'photo-item';
+                        photoItem.innerHTML = `
+                            <img src="${e.target.result}" alt="Garbage photo">
+                            <button class="photo-remove" onclick="removePhoto(this)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        `;
+                        preview.appendChild(photoItem);
+                        uploadedPhotos.push({
+                            file: file,
+                            dataUrl: e.target.result
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            input.value = ''; // Clear input
+        }
+
+        function removePhoto(button) {
+            const photoItem = button.parentElement;
+            const index = Array.from(photoItem.parentElement.children).indexOf(photoItem);
+            uploadedPhotos.splice(index, 1);
+            photoItem.remove();
+        }
+
+        // Priority selection
+        function setupPrioritySelection() {
+            document.querySelectorAll('.priority-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.priority-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedPriority = this.dataset.priority;
+                });
+            });
+        }
+
+        // Update live statistics
+        function updateLiveStats() {
+            // Simulate real-time updates
+            const todayReports = Math.floor(Math.random() * 20) + 120;
+            const resolvedToday = Math.floor(Math.random() * 15) + 85;
+            const responseTime = (Math.random() * 2 + 1.5).toFixed(1);
+            
+            document.getElementById('todayReports').textContent = todayReports;
+            document.getElementById('resolvedToday').textContent = resolvedToday;
+            document.getElementById('responseTime').textContent = responseTime;
+        }
+
+        // Form submission
+        document.getElementById('garbageReportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validation
+            if (uploadedPhotos.length === 0) {
+                alert('Please upload at least one photo of the garbage.');
+                return;
+            }
+            
+            if (!currentLocation) {
+                alert('Please allow location access to submit the report.');
+                return;
+            }
+            
+            if (!selectedPriority) {
+                alert('Please select a priority level.');
+                return;
+            }
+            
+            const formData = new FormData(this);
+            
+            // Add photos to form data
+            uploadedPhotos.forEach((photo, index) => {
+                formData.append(`photo_${index}`, photo.file);
+            });
+            
+            // Add location data
+            formData.append('latitude', currentLocation.lat);
+            formData.append('longitude', currentLocation.lng);
+            formData.append('priority', selectedPriority);
+            
+            // Simulate form submission
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            submitButton.disabled = true;
+            
+            setTimeout(() => {
+                const reportId = 'GR' + Date.now().toString().substr(-6);
+                alert(`Garbage report submitted successfully!\n\nReport ID: ${reportId}\n\nYou will receive SMS updates about the collection status.`);
+                
+                // Reset form
+                this.reset();
+                document.getElementById('photoPreview').innerHTML = '';
+                uploadedPhotos = [];
+                selectedPriority = null;
+                document.querySelectorAll('.priority-option').forEach(opt => opt.classList.remove('selected'));
+                
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+                
+                // Redirect to tracking page
+                // window.location.href = `track-collection.html?report=${reportId}`;
+            }, 2000);
+        });
+
+        // Form validation
+        document.querySelectorAll('input[required], select[required]').forEach(field => {
+            field.addEventListener('blur', function() {
+                if (!this.value.trim()) {
+                    this.style.borderColor = '#dc3545';
+                } else {
+                    this.style.borderColor = '#28a745';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

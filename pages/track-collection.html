@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Collection - SMART BBMP</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .track-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 120px 0 60px;
+            text-align: center;
+        }
+        .track-content {
+            padding: 60px 0;
+            background: var(--light-gray);
+        }
+        .track-form {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        .status-timeline {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            position: relative;
+        }
+        .status-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        .status-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        .status-circle.completed {
+            background: var(--success-color);
+        }
+        .status-circle.active {
+            background: var(--primary-color);
+            animation: pulse 2s infinite;
+        }
+        .status-line {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--gray-color);
+            z-index: 1;
+        }
+        .status-line.completed {
+            background: var(--success-color);
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(44, 90, 160, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(44, 90, 160, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(44, 90, 160, 0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img src="../images/bbmp-logo.png" alt="BBMP Logo" class="logo-img">
+                    <div class="logo-text">
+                        <h2>SMART BBMP</h2>
+                        <p>Waste Management</p>
+                    </div>
+                </div>
+                <div class="nav-menu">
+                    <a href="../index.html" class="nav-link">Home</a>
+                    <a href="report-garbage.html" class="nav-link">Report Garbage</a>
+                    <a href="admin-dashboard.html" class="nav-link">Heatmap</a>
+                    <a href="../index.html#contact" class="nav-link">Contact</a>
+                    <a href="citizen-login.html" class="nav-link login-btn">Login</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Track Header -->
+    <section class="track-header">
+        <div class="container">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+                <i class="fas fa-search-location" style="font-size: 3rem;"></i>
+                <h1>Track Collection Status</h1>
+            </div>
+            <p>Monitor the status of your garbage collection request</p>
+        </div>
+    </section>
+
+    <!-- Track Content -->
+    <section class="track-content">
+        <div class="container">
+            <div class="track-form">
+                <h3 style="color: var(--primary-color); margin-bottom: 1.5rem;">
+                    <i class="fas fa-clipboard-list"></i> Enter Report Details
+                </h3>
+                <form id="trackingForm" style="margin-bottom: 2rem;">
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <input type="text" id="reportId" placeholder="Enter Report ID (e.g., GR123456)" style="width: 100%; padding: 1rem; border: 1px solid #ddd; border-radius: var(--border-radius); font-size: 1rem;">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-search"></i> Track Status
+                    </button>
+                </form>
+                
+                <div id="trackingResult" style="display: none;">
+                    <div style="background: var(--light-gray); padding: 1.5rem; border-radius: var(--border-radius); margin-bottom: 2rem;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">Report Details</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left;">
+                            <div><strong>Report ID:</strong> <span id="displayReportId"></span></div>
+                            <div><strong>Priority:</strong> <span id="displayPriority"></span></div>
+                            <div><strong>Location:</strong> <span id="displayLocation"></span></div>
+                            <div><strong>Reported:</strong> <span id="displayTime"></span></div>
+                        </div>
+                    </div>
+
+                    <div class="status-timeline">
+                        <div class="status-step">
+                            <div class="status-circle completed" id="step1">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="status-title">Reported</div>
+                            <div class="status-line completed" id="line1"></div>
+                        </div>
+                        <div class="status-step">
+                            <div class="status-circle active" id="step2">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="status-title">Under Review</div>
+                            <div class="status-line" id="line2"></div>
+                        </div>
+                        <div class="status-step">
+                            <div class="status-circle" id="step3">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div class="status-title">Team Assigned</div>
+                            <div class="status-line" id="line3"></div>
+                        </div>
+                        <div class="status-step">
+                            <div class="status-circle" id="step4">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="status-title">Completed</div>
+                        </div>
+                    </div>
+
+                    <div id="statusDetails" style="background: var(--light-gray); padding: 1.5rem; border-radius: var(--border-radius); margin-top: 2rem;">
+                        <h5 style="color: var(--primary-color); margin-bottom: 1rem;">Current Status</h5>
+                        <p id="statusMessage">Your report has been received and is currently under review by our team.</p>
+                        <p id="estimatedTime" style="font-weight: 500; margin-top: 0.5rem;">Estimated completion: 2-4 hours</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sample Reports -->
+            <div style="max-width: 800px; margin: 0 auto;">
+                <h3 style="text-align: center; color: var(--primary-color); margin-bottom: 2rem;">Try Sample Report IDs</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <div style="background: white; padding: 1.5rem; border-radius: var(--border-radius-lg); box-shadow: var(--shadow); text-align: center;" onclick="trackSample('GR001234')">
+                        <div style="color: var(--success-color); font-size: 2rem; margin-bottom: 0.5rem;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h4>GR001234</h4>
+                        <p style="color: var(--gray-color);">Koramangala - Completed</p>
+                    </div>
+                    <div style="background: white; padding: 1.5rem; border-radius: var(--border-radius-lg); box-shadow: var(--shadow); text-align: center;" onclick="trackSample('GR001235')">
+                        <div style="color: var(--primary-color); font-size: 2rem; margin-bottom: 0.5rem;">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <h4>GR001235</h4>
+                        <p style="color: var(--gray-color);">Indiranagar - In Progress</p>
+                    </div>
+                    <div style="background: white; padding: 1.5rem; border-radius: var(--border-radius-lg); box-shadow: var(--shadow); text-align: center;" onclick="trackSample('GR001236')">
+                        <div style="color: var(--warning-color); font-size: 2rem; margin-bottom: 0.5rem;">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h4>GR001236</h4>
+                        <p style="color: var(--gray-color);">Jayanagar - Under Review</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div style="text-align: center; padding: 2rem 0;">
+                <p>&copy; 2024 BBMP. All rights reserved. | <a href="../index.html" style="color: var(--accent-color);">Back to Home</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const sampleData = {
+            'GR001234': {
+                id: 'GR001234',
+                priority: 'Medium',
+                location: 'Koramangala, 5th Block',
+                time: '2 hours ago',
+                status: 'completed',
+                message: 'Garbage collection has been completed successfully. Thank you for keeping Bengaluru clean!',
+                estimatedTime: 'Completed'
+            },
+            'GR001235': {
+                id: 'GR001235',
+                priority: 'High',
+                location: 'Indiranagar, 100 Feet Road',
+                time: '45 minutes ago',
+                status: 'assigned',
+                message: 'Collection team has been assigned and is en route to your location.',
+                estimatedTime: 'Expected completion: 30-60 minutes'
+            },
+            'GR001236': {
+                id: 'GR001236',
+                priority: 'Low',
+                location: 'Jayanagar, 4th Block',
+                time: '1 hour ago',
+                status: 'review',
+                message: 'Your report has been received and is currently under review by our team.',
+                estimatedTime: 'Estimated completion: 2-4 hours'
+            }
+        };
+
+        document.getElementById('trackingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const reportId = document.getElementById('reportId').value.trim();
+            
+            if (!reportId) {
+                alert('Please enter a report ID');
+                return;
+            }
+
+            trackReport(reportId);
+        });
+
+        function trackSample(reportId) {
+            document.getElementById('reportId').value = reportId;
+            trackReport(reportId);
+        }
+
+        function trackReport(reportId) {
+            const resultDiv = document.getElementById('trackingResult');
+            
+            // Check if it's a sample ID
+            if (sampleData[reportId]) {
+                const data = sampleData[reportId];
+                displayTrackingResult(data);
+            } else {
+                // Generate random tracking data for demo
+                const data = {
+                    id: reportId,
+                    priority: ['Low', 'Medium', 'High'][Math.floor(Math.random() * 3)],
+                    location: ['Indiranagar', 'Koramangala', 'Jayanagar', 'Whitefield'][Math.floor(Math.random() * 4)],
+                    time: Math.floor(Math.random() * 24) + ' hours ago',
+                    status: ['review', 'assigned', 'completed'][Math.floor(Math.random() * 3)],
+                    message: 'Your report has been received and is being processed.',
+                    estimatedTime: '2-4 hours'
+                };
+                displayTrackingResult(data);
+            }
+        }
+
+        function displayTrackingResult(data) {
+            // Update display fields
+            document.getElementById('displayReportId').textContent = data.id;
+            document.getElementById('displayPriority').textContent = data.priority;
+            document.getElementById('displayLocation').textContent = data.location;
+            document.getElementById('displayTime').textContent = data.time;
+            document.getElementById('statusMessage').textContent = data.message;
+            document.getElementById('estimatedTime').textContent = data.estimatedTime;
+
+            // Reset all steps
+            for (let i = 1; i <= 4; i++) {
+                const step = document.getElementById(`step${i}`);
+                const line = document.getElementById(`line${i}`);
+                step.classList.remove('completed', 'active');
+                if (line) line.classList.remove('completed');
+            }
+
+            // Set status based on current stage
+            let currentStep = 1;
+            switch (data.status) {
+                case 'review':
+                    currentStep = 2;
+                    break;
+                case 'assigned':
+                    currentStep = 3;
+                    break;
+                case 'completed':
+                    currentStep = 4;
+                    break;
+            }
+
+            // Mark completed steps
+            for (let i = 1; i < currentStep; i++) {
+                document.getElementById(`step${i}`).classList.add('completed');
+                if (i < 4) document.getElementById(`line${i}`).classList.add('completed');
+            }
+
+            // Mark current step as active (unless completed)
+            if (data.status !== 'completed') {
+                document.getElementById(`step${currentStep}`).classList.add('active');
+            } else {
+                document.getElementById(`step${currentStep}`).classList.add('completed');
+                document.getElementById(`line3`).classList.add('completed');
+            }
+
+            // Show result
+            document.getElementById('trackingResult').style.display = 'block';
+            document.getElementById('trackingResult').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

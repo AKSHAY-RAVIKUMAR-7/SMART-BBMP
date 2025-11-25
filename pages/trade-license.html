@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trade License - SMART BBMP</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .service-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 120px 0 60px;
+            text-align: center;
+        }
+        .service-content {
+            padding: 60px 0;
+            background: var(--light-gray);
+        }
+        .service-form {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        .form-section {
+            margin-bottom: 2rem;
+        }
+        .form-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: bold;
+        }
+        .step-circle.active {
+            background: var(--primary-color);
+        }
+        .step-circle.completed {
+            background: var(--success-color);
+        }
+        .step-line {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--gray-color);
+            z-index: -1;
+        }
+        .step-line.completed {
+            background: var(--success-color);
+        }
+        .document-upload {
+            border: 2px dashed var(--gray-color);
+            padding: 2rem;
+            text-align: center;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+        .document-upload:hover {
+            border-color: var(--primary-color);
+            background: rgba(44, 90, 160, 0.05);
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img src="../images/bbmp-logo.png" alt="BBMP Logo" class="logo-img">
+                    <div class="logo-text">
+                        <h2>SMART BBMP</h2>
+                        <p>Digital Bengaluru</p>
+                    </div>
+                </div>
+                <div class="nav-menu">
+                    <a href="../index.html" class="nav-link">Home</a>
+                    <a href="../index.html#services" class="nav-link">Services</a>
+                    <a href="../index.html#about" class="nav-link">About</a>
+                    <a href="../index.html#contact" class="nav-link">Contact</a>
+                    <a href="citizen-login.html" class="nav-link login-btn">Citizen Login</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Service Header -->
+    <section class="service-header">
+        <div class="container">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+                <i class="fas fa-certificate" style="font-size: 3rem;"></i>
+                <h1>Trade License Application</h1>
+            </div>
+            <p>Apply for trade license online - fast, secure, and paperless</p>
+            <div style="margin-top: 2rem;">
+                <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; margin: 0 0.5rem;">Digital Application</span>
+                <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; margin: 0 0.5rem;">Document Upload</span>
+                <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; margin: 0 0.5rem;">Online Tracking</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Content -->
+    <section class="service-content">
+        <div class="container">
+            <!-- Progress Steps -->
+            <div class="service-form">
+                <div class="progress-steps">
+                    <div class="progress-step">
+                        <div class="step-circle active" id="step1">1</div>
+                        <div class="step-title">Basic Details</div>
+                        <div class="step-line" id="line1"></div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-circle" id="step2">2</div>
+                        <div class="step-title">Business Info</div>
+                        <div class="step-line" id="line2"></div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-circle" id="step3">3</div>
+                        <div class="step-title">Documents</div>
+                        <div class="step-line" id="line3"></div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-circle" id="step4">4</div>
+                        <div class="step-title">Review & Submit</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start;">
+                <!-- Main Form -->
+                <div>
+                    <div class="service-form">
+                        <h2 style="color: var(--primary-color); margin-bottom: 1.5rem;">New Trade License Application</h2>
+                        
+                        <form id="tradeLicenseForm">
+                            <!-- Step 1: Basic Details -->
+                            <div id="formStep1" class="form-step">
+                                <div class="form-section">
+                                    <h3><i class="fas fa-user"></i> Applicant Details</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>Full Name *</label>
+                                            <input type="text" name="fullName" placeholder="Enter full name" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Father's/Husband's Name *</label>
+                                            <input type="text" name="fatherName" placeholder="Enter father's/husband's name" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>Mobile Number *</label>
+                                            <input type="tel" name="mobile" placeholder="Enter mobile number" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Email Address *</label>
+                                            <input type="email" name="email" placeholder="Enter email address" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>Aadhaar Number *</label>
+                                            <input type="text" name="aadhaar" placeholder="Enter 12-digit Aadhaar number" maxlength="12" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>PAN Number</label>
+                                            <input type="text" name="pan" placeholder="Enter PAN number" maxlength="10" style="text-transform: uppercase;">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Residential Address *</label>
+                                        <textarea name="residentialAddress" placeholder="Enter complete residential address" rows="3" required></textarea>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary" onclick="nextStep(2)" style="width: 100%;">
+                                    Continue <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+
+                            <!-- Step 2: Business Information -->
+                            <div id="formStep2" class="form-step" style="display: none;">
+                                <div class="form-section">
+                                    <h3><i class="fas fa-store"></i> Business Information</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>Business Name *</label>
+                                            <input type="text" name="businessName" placeholder="Enter business name" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Business Type *</label>
+                                            <select name="businessType" required>
+                                                <option value="">Select business type</option>
+                                                <option value="retail">Retail Shop</option>
+                                                <option value="restaurant">Restaurant/Hotel</option>
+                                                <option value="manufacturing">Manufacturing</option>
+                                                <option value="service">Service Provider</option>
+                                                <option value="wholesale">Wholesale Business</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>Nature of Business *</label>
+                                            <input type="text" name="businessNature" placeholder="Describe nature of business" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Number of Employees</label>
+                                            <select name="employeeCount">
+                                                <option value="">Select employee range</option>
+                                                <option value="1-5">1-5</option>
+                                                <option value="6-10">6-10</option>
+                                                <option value="11-25">11-25</option>
+                                                <option value="26-50">26-50</option>
+                                                <option value="50+">50+</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Business Address *</label>
+                                        <textarea name="businessAddress" placeholder="Enter complete business address" rows="3" required></textarea>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>Ward Number</label>
+                                            <input type="text" name="wardNumber" placeholder="Enter ward number">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Zone</label>
+                                            <select name="zone">
+                                                <option value="">Select zone</option>
+                                                <option value="east">East Zone</option>
+                                                <option value="west">West Zone</option>
+                                                <option value="south">South Zone</option>
+                                                <option value="north">North Zone</option>
+                                                <option value="central">Central Zone</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 1rem;">
+                                    <button type="button" class="btn btn-secondary" onclick="prevStep(1)" style="flex: 1;">
+                                        <i class="fas fa-arrow-left"></i> Previous
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="nextStep(3)" style="flex: 1;">
+                                        Continue <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Document Upload -->
+                            <div id="formStep3" class="form-step" style="display: none;">
+                                <div class="form-section">
+                                    <h3><i class="fas fa-upload"></i> Document Upload</h3>
+                                    <p style="color: var(--gray-color); margin-bottom: 1.5rem;">
+                                        Please upload the required documents in PDF, JPG, or PNG format (Max size: 2MB each)
+                                    </p>
+                                    
+                                    <div class="form-group">
+                                        <label>Aadhaar Card *</label>
+                                        <div class="document-upload" onclick="triggerFileInput('aadhaarDoc')">
+                                            <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                                            <p>Click to upload Aadhaar Card</p>
+                                            <input type="file" id="aadhaarDoc" name="aadhaarDoc" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="handleFileUpload(this, 'aadhaarStatus')">
+                                        </div>
+                                        <div id="aadhaarStatus" class="upload-status"></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>PAN Card</label>
+                                        <div class="document-upload" onclick="triggerFileInput('panDoc')">
+                                            <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                                            <p>Click to upload PAN Card</p>
+                                            <input type="file" id="panDoc" name="panDoc" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="handleFileUpload(this, 'panStatus')">
+                                        </div>
+                                        <div id="panStatus" class="upload-status"></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Property/Rent Agreement *</label>
+                                        <div class="document-upload" onclick="triggerFileInput('propertyDoc')">
+                                            <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                                            <p>Click to upload Property/Rent Agreement</p>
+                                            <input type="file" id="propertyDoc" name="propertyDoc" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="handleFileUpload(this, 'propertyStatus')">
+                                        </div>
+                                        <div id="propertyStatus" class="upload-status"></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Passport Size Photo *</label>
+                                        <div class="document-upload" onclick="triggerFileInput('photoDoc')">
+                                            <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                                            <p>Click to upload Passport Size Photo</p>
+                                            <input type="file" id="photoDoc" name="photoDoc" accept=".jpg,.jpeg,.png" style="display: none;" onchange="handleFileUpload(this, 'photoStatus')">
+                                        </div>
+                                        <div id="photoStatus" class="upload-status"></div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 1rem;">
+                                    <button type="button" class="btn btn-secondary" onclick="prevStep(2)" style="flex: 1;">
+                                        <i class="fas fa-arrow-left"></i> Previous
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="nextStep(4)" style="flex: 1;">
+                                        Continue <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Step 4: Review & Submit -->
+                            <div id="formStep4" class="form-step" style="display: none;">
+                                <div class="form-section">
+                                    <h3><i class="fas fa-check-circle"></i> Review & Submit</h3>
+                                    <div id="reviewContent" style="background: var(--light-gray); padding: 1.5rem; border-radius: var(--border-radius); margin-bottom: 1.5rem;">
+                                        <!-- Review content will be populated by JavaScript -->
+                                    </div>
+                                    <div style="background: white; padding: 1.5rem; border-radius: var(--border-radius); border: 1px solid var(--primary-color); margin-bottom: 1.5rem;">
+                                        <h4 style="color: var(--primary-color); margin-bottom: 1rem;">License Fee</h4>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span>Application Fee:</span>
+                                            <span>₹ 500</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span>Processing Fee:</span>
+                                            <span>₹ 100</span>
+                                        </div>
+                                        <div style="display: flex; justify-content: space-between; font-weight: bold; border-top: 1px solid #ddd; padding-top: 0.5rem;">
+                                            <span>Total Amount:</span>
+                                            <span>₹ 600</span>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 1.5rem;">
+                                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <input type="checkbox" name="declaration" required>
+                                            <span>I declare that all the information provided is true and correct to the best of my knowledge.</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 1rem;">
+                                    <button type="button" class="btn btn-secondary" onclick="prevStep(3)" style="flex: 1;">
+                                        <i class="fas fa-arrow-left"></i> Previous
+                                    </button>
+                                    <button type="submit" class="btn btn-primary" style="flex: 1;">
+                                        <i class="fas fa-paper-plane"></i> Submit Application
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div>
+                    <!-- Quick Info -->
+                    <div class="service-form">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                            <i class="fas fa-info-circle"></i> Application Information
+                        </h3>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Processing Time:</strong> 15-30 working days
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Validity:</strong> 1 year from issue date
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Renewal:</strong> Required annually
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Application Fee:</strong> ₹ 600 (Non-refundable)
+                        </div>
+                    </div>
+
+                    <!-- Required Documents -->
+                    <div class="service-form">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                            <i class="fas fa-clipboard-list"></i> Required Documents
+                        </h3>
+                        <ul style="list-style: none; padding: 0; color: var(--gray-color);">
+                            <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-check" style="color: var(--success-color);"></i>
+                                Aadhaar Card (Mandatory)
+                            </li>
+                            <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-check" style="color: var(--success-color);"></i>
+                                PAN Card
+                            </li>
+                            <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-check" style="color: var(--success-color);"></i>
+                                Property Document/Rent Agreement
+                            </li>
+                            <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-check" style="color: var(--success-color);"></i>
+                                Passport Size Photo
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Help & Support -->
+                    <div class="service-form">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                            <i class="fas fa-headset"></i> Need Help?
+                        </h3>
+                        <p style="margin-bottom: 1rem; color: var(--gray-color);">
+                            Our support team is here to help you with your application.
+                        </p>
+                        <div style="margin-bottom: 0.5rem;">
+                            <i class="fas fa-phone" style="color: var(--primary-color);"></i>
+                            <span style="margin-left: 0.5rem;">1912 (Helpline)</span>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <i class="fas fa-envelope" style="color: var(--primary-color);"></i>
+                            <span style="margin-left: 0.5rem;">trade@bbmp.gov.in</span>
+                        </div>
+                        <a href="#" class="btn btn-secondary" style="width: 100%;">
+                            <i class="fas fa-download"></i> Download Guidelines
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (simplified) -->
+    <footer class="footer">
+        <div class="container">
+            <div style="text-align: center; padding: 2rem 0;">
+                <p>&copy; 2024 BBMP. All rights reserved. | <a href="../index.html" style="color: var(--accent-color);">Back to Home</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentStep = 1;
+
+        // Step navigation
+        function nextStep(step) {
+            if (validateCurrentStep()) {
+                document.getElementById(`formStep${currentStep}`).style.display = 'none';
+                document.getElementById(`formStep${step}`).style.display = 'block';
+                
+                // Update progress indicators
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                document.getElementById(`step${currentStep}`).classList.add('completed');
+                document.getElementById(`line${currentStep}`).classList.add('completed');
+                document.getElementById(`step${step}`).classList.add('active');
+                
+                currentStep = step;
+                
+                // Populate review if going to step 4
+                if (step === 4) {
+                    populateReview();
+                }
+            }
+        }
+
+        function prevStep(step) {
+            document.getElementById(`formStep${currentStep}`).style.display = 'none';
+            document.getElementById(`formStep${step}`).style.display = 'block';
+            
+            // Update progress indicators
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            document.getElementById(`step${step}`).classList.remove('completed');
+            document.getElementById(`step${step}`).classList.add('active');
+            if (step < currentStep) {
+                document.getElementById(`line${step}`).classList.remove('completed');
+            }
+            
+            currentStep = step;
+        }
+
+        // Form validation
+        function validateCurrentStep() {
+            const currentStepForm = document.getElementById(`formStep${currentStep}`);
+            const requiredFields = currentStepForm.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#dc3545';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#ddd';
+                }
+            });
+            
+            if (!isValid) {
+                alert('Please fill all required fields');
+            }
+            
+            return isValid;
+        }
+
+        // File upload functions
+        function triggerFileInput(inputId) {
+            document.getElementById(inputId).click();
+        }
+
+        function handleFileUpload(input, statusId) {
+            const file = input.files[0];
+            const statusDiv = document.getElementById(statusId);
+            
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) { // 2MB limit
+                    statusDiv.innerHTML = '<span style="color: #dc3545;"><i class="fas fa-exclamation-triangle"></i> File size exceeds 2MB</span>';
+                    input.value = '';
+                    return;
+                }
+                
+                statusDiv.innerHTML = `<span style="color: #28a745;"><i class="fas fa-check-circle"></i> ${file.name} uploaded successfully</span>`;
+                input.parentElement.style.borderColor = '#28a745';
+            }
+        }
+
+        // Populate review section
+        function populateReview() {
+            const form = document.getElementById('tradeLicenseForm');
+            const formData = new FormData(form);
+            let reviewHTML = '';
+            
+            reviewHTML += '<h4>Applicant Details</h4>';
+            reviewHTML += `<p><strong>Name:</strong> ${formData.get('fullName') || 'Not provided'}</p>`;
+            reviewHTML += `<p><strong>Mobile:</strong> ${formData.get('mobile') || 'Not provided'}</p>`;
+            reviewHTML += `<p><strong>Email:</strong> ${formData.get('email') || 'Not provided'}</p>`;
+            
+            reviewHTML += '<h4 style="margin-top: 1rem;">Business Details</h4>';
+            reviewHTML += `<p><strong>Business Name:</strong> ${formData.get('businessName') || 'Not provided'}</p>`;
+            reviewHTML += `<p><strong>Business Type:</strong> ${formData.get('businessType') || 'Not provided'}</p>`;
+            reviewHTML += `<p><strong>Nature:</strong> ${formData.get('businessNature') || 'Not provided'}</p>`;
+            
+            document.getElementById('reviewContent').innerHTML = reviewHTML;
+        }
+
+        // Form submission
+        document.getElementById('tradeLicenseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const declaration = this.querySelector('[name="declaration"]').checked;
+            if (!declaration) {
+                alert('Please accept the declaration to proceed');
+                return;
+            }
+            
+            // Simulate application submission
+            alert('Application submitted successfully! Your application ID is TL2024001234. You will receive confirmation via SMS and email.');
+            
+            // In real application, redirect to payment gateway or confirmation page
+            window.location.href = '../index.html';
+        });
+
+        // Input validation
+        document.querySelectorAll('input[required], select[required], textarea[required]').forEach(field => {
+            field.addEventListener('blur', function() {
+                if (!this.value.trim()) {
+                    this.style.borderColor = '#dc3545';
+                } else {
+                    this.style.borderColor = '#28a745';
+                }
+            });
+        });
+
+        // Aadhaar number validation
+        document.querySelector('[name="aadhaar"]').addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '');
+            if (this.value.length === 12) {
+                this.style.borderColor = '#28a745';
+            }
+        });
+
+        // PAN number validation
+        document.querySelector('[name="pan"]').addEventListener('input', function() {
+            this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        });
+    </script>
+</body>
+</html>

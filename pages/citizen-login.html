@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Login - SMART BBMP</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem 0;
+        }
+        .login-box {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        .login-form-section {
+            padding: 3rem;
+        }
+        .login-info-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .login-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-radius: var(--border-radius);
+            background: var(--light-gray);
+            padding: 0.25rem;
+        }
+        .login-tab {
+            flex: 1;
+            padding: 0.75rem;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .login-tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        .login-form {
+            display: none;
+        }
+        .login-form.active {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .login-box {
+                grid-template-columns: 1fr;
+            }
+            .login-info-section {
+                order: -1;
+                padding: 2rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="container">
+            <div class="login-box">
+                <!-- Login Form Section -->
+                <div class="login-form-section">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <div class="logo-img" style="margin: 0 auto 1rem;">BBMP</div>
+                        <h2 style="color: var(--primary-color); margin-bottom: 0.5rem;">Welcome Back</h2>
+                        <p style="color: var(--gray-color);">Sign in to access SMART BBMP services</p>
+                    </div>
+
+                    <!-- Login Tabs -->
+                    <div class="login-tabs">
+                        <button class="login-tab active" onclick="switchTab('citizen')">
+                            <i class="fas fa-user"></i> Citizen
+                        </button>
+                        <button class="login-tab" onclick="switchTab('official')">
+                            <i class="fas fa-user-tie"></i> Official
+                        </button>
+                    </div>
+
+                    <!-- Citizen Login Form -->
+                    <form id="citizenLoginForm" class="login-form active">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Citizen ID / Mobile Number</label>
+                            <input type="text" name="citizenId" placeholder="Enter your Citizen ID or Mobile" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> Password</label>
+                            <input type="password" name="password" placeholder="Enter your password" required>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 14px;">
+                                <input type="checkbox" name="remember"> Remember me
+                            </label>
+                            <a href="#" style="color: var(--primary-color); font-size: 14px; text-decoration: none;">Forgot Password?</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">
+                            <i class="fas fa-sign-in-alt"></i> Sign In
+                        </button>
+                        <div style="text-align: center;">
+                            <p style="color: var(--gray-color); font-size: 14px;">
+                                Don't have an account? 
+                                <a href="citizen-registration.html" style="color: var(--primary-color); text-decoration: none;">Register here</a>
+                            </p>
+                        </div>
+                    </form>
+
+                    <!-- Official Login Form -->
+                    <form id="officialLoginForm" class="login-form">
+                        <div class="form-group">
+                            <label><i class="fas fa-id-badge"></i> Employee ID</label>
+                            <input type="text" name="employeeId" placeholder="Enter your Employee ID" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> Password</label>
+                            <input type="password" name="password" placeholder="Enter your password" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-building"></i> Department</label>
+                            <select name="department" required>
+                                <option value="">Select Department</option>
+                                <option value="revenue">Revenue Department</option>
+                                <option value="health">Health Department</option>
+                                <option value="engineering">Engineering Department</option>
+                                <option value="admin">Administration</option>
+                                <option value="it">IT Department</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 14px;">
+                                <input type="checkbox" name="remember"> Remember login
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">
+                            <i class="fas fa-sign-in-alt"></i> Official Login
+                        </button>
+                    </form>
+
+                    <!-- Alternative Login Options -->
+                    <div style="margin-top: 2rem;">
+                        <div style="text-align: center; margin-bottom: 1rem;">
+                            <span style="color: var(--gray-color); font-size: 14px;">Or sign in with</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <button type="button" class="btn" style="background: #4285f4; color: white; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                <i class="fab fa-google"></i> Google
+                            </button>
+                            <button type="button" class="btn" style="background: #1877f2; color: white; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                                <i class="fab fa-facebook"></i> Facebook
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Section -->
+                <div class="login-info-section">
+                    <div>
+                        <h3 style="font-size: 2rem; margin-bottom: 1rem;">
+                            <i class="fas fa-city"></i> SMART BBMP Portal
+                        </h3>
+                        <p style="margin-bottom: 2rem; opacity: 0.9;">
+                            Access all your municipal services digitally. Pay taxes, apply for licenses, 
+                            get certificates, and track applications - all from one place.
+                        </p>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <h4 style="margin-bottom: 1rem;"><i class="fas fa-check-circle"></i> Benefits</h4>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-clock" style="color: var(--accent-color);"></i>
+                                    24/7 Service Access
+                                </li>
+                                <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-mobile-alt" style="color: var(--accent-color);"></i>
+                                    Mobile Friendly
+                                </li>
+                                <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-shield-alt" style="color: var(--accent-color);"></i>
+                                    Secure Transactions
+                                </li>
+                                <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-download" style="color: var(--accent-color);"></i>
+                                    Instant Downloads
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: var(--border-radius); margin-bottom: 2rem;">
+                            <h5 style="margin-bottom: 0.5rem;">Quick Stats</h5>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: center;">
+                                <div>
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: var(--accent-color);">50L+</div>
+                                    <div style="font-size: 0.8rem; opacity: 0.8;">Registered Citizens</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 1.5rem; font-weight: bold; color: var(--accent-color);">1M+</div>
+                                    <div style="font-size: 0.8rem; opacity: 0.8;">Services Delivered</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center;">
+                            <a href="../index.html" style="color: white; text-decoration: none; opacity: 0.8; font-size: 14px;">
+                                <i class="fas fa-arrow-left"></i> Back to Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.login-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update forms
+            document.querySelectorAll('.login-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.getElementById(tabName + 'LoginForm').classList.add('active');
+        }
+
+        // Form submissions
+        document.getElementById('citizenLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const citizenId = this.querySelector('[name="citizenId"]').value;
+            const password = this.querySelector('[name="password"]').value;
+            
+            if (citizenId && password) {
+                // Simulate login process
+                alert('Login successful! Redirecting to citizen dashboard...');
+                // In real application, redirect to dashboard
+                window.location.href = 'citizen-dashboard.html';
+            }
+        });
+
+        document.getElementById('officialLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const employeeId = this.querySelector('[name="employeeId"]').value;
+            const password = this.querySelector('[name="password"]').value;
+            const department = this.querySelector('[name="department"]').value;
+            
+            if (employeeId && password && department) {
+                // Simulate login process
+                alert('Official login successful! Redirecting to admin panel...');
+                // In real application, redirect to admin panel
+                window.location.href = 'admin-dashboard.html';
+            }
+        });
+
+        // Form validation
+        document.querySelectorAll('input[required], select[required]').forEach(field => {
+            field.addEventListener('blur', function() {
+                if (!this.value.trim()) {
+                    this.style.borderColor = '#dc3545';
+                } else {
+                    this.style.borderColor = '#ddd';
+                }
+            });
+
+            field.addEventListener('input', function() {
+                if (this.value.trim()) {
+                    this.style.borderColor = '#28a745';
+                }
+            });
+        });
+
+        // Social login handlers
+        document.querySelector('button[style*="4285f4"]').addEventListener('click', function() {
+            alert('Google Sign-In integration coming soon!');
+        });
+
+        document.querySelector('button[style*="1877f2"]').addEventListener('click', function() {
+            alert('Facebook Sign-In integration coming soon!');
+        });
+
+        // Password visibility toggle
+        document.querySelectorAll('input[type="password"]').forEach(passwordField => {
+            const wrapper = passwordField.parentNode;
+            const toggleButton = document.createElement('button');
+            toggleButton.type = 'button';
+            toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
+            toggleButton.style.cssText = `
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: none;
+                border: none;
+                cursor: pointer;
+                color: var(--gray-color);
+            `;
+            
+            wrapper.style.position = 'relative';
+            wrapper.appendChild(toggleButton);
+            
+            toggleButton.addEventListener('click', function() {
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    this.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                } else {
+                    passwordField.type = 'password';
+                    this.innerHTML = '<i class="fas fa-eye"></i>';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SMART BBMP Waste Management</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        .admin-header {
+            background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
+            color: white;
+            padding: 100px 0 40px;
+        }
+        .admin-content {
+            padding: 40px 0;
+            background: var(--light-gray);
+        }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            text-align: center;
+            border-left: 4px solid var(--primary-color);
+        }
+        .stat-card.danger { border-left-color: #dc3545; }
+        .stat-card.warning { border-left-color: #ffc107; }
+        .stat-card.success { border-left-color: #28a745; }
+        .stat-card.info { border-left-color: #17a2b8; }
+        .main-dashboard {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .heatmap-container {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .heatmap-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .heatmap-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .heatmap-controls select,
+        .heatmap-controls button {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+        }
+        .heatmap-controls button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        #heatmapCanvas {
+            height: 500px;
+            width: 100%;
+        }
+        .reports-panel {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+        }
+        .reports-header {
+            background: var(--secondary-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+        }
+        .report-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .report-item:hover {
+            background: var(--light-gray);
+        }
+        .priority-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: white;
+        }
+        .priority-high { background: #dc3545; }
+        .priority-medium { background: #ffc107; color: #212529; }
+        .priority-low { background: #28a745; }
+        .route-optimization {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .route-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .route-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .route-stat {
+            background: var(--light-gray);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        .filter-controls {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .main-dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <img src="../images/bbmp-logo.png" alt="BBMP Logo" class="logo-img">
+                    <div class="logo-text">
+                        <h2>SMART BBMP</h2>
+                        <p>Admin Panel</p>
+                    </div>
+                </div>
+                <div class="nav-menu">
+                    <a href="../index.html" class="nav-link">Home</a>
+                    <a href="report-garbage.html" class="nav-link">Report Garbage</a>
+                    <a href="#" class="nav-link">Analytics</a>
+                    <a href="#" class="nav-link">Settings</a>
+                    <a href="citizen-login.html" class="nav-link login-btn">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Admin Header -->
+    <section class="admin-header">
+        <div class="container">
+            <h1><i class="fas fa-chart-line"></i> Waste Management Dashboard</h1>
+            <p>Real-time monitoring and route optimization for garbage collection</p>
+            <div style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.9;">
+                <i class="fas fa-clock"></i> Last updated: <span id="lastUpdated">Just now</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Content -->
+    <section class="admin-content">
+        <div class="container">
+            <!-- Statistics Dashboard -->
+            <div class="dashboard-grid">
+                <div class="stat-card danger">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #dc3545; margin-bottom: 0.5rem;"></i>
+                    <div style="font-size: 2rem; font-weight: bold; color: #dc3545;" id="pendingReports">47</div>
+                    <div>Pending Reports</div>
+                </div>
+                <div class="stat-card warning">
+                    <i class="fas fa-truck" style="font-size: 2rem; color: #ffc107; margin-bottom: 0.5rem;"></i>
+                    <div style="font-size: 2rem; font-weight: bold; color: #ffc107;" id="activeTrucks">23</div>
+                    <div>Active Trucks</div>
+                </div>
+                <div class="stat-card success">
+                    <i class="fas fa-check-circle" style="font-size: 2rem; color: #28a745; margin-bottom: 0.5rem;"></i>
+                    <div style="font-size: 2rem; font-weight: bold; color: #28a745;" id="resolvedToday">156</div>
+                    <div>Resolved Today</div>
+                </div>
+                <div class="stat-card info">
+                    <i class="fas fa-route" style="font-size: 2rem; color: #17a2b8; margin-bottom: 0.5rem;"></i>
+                    <div style="font-size: 2rem; font-weight: bold; color: #17a2b8;" id="routeEfficiency">87%</div>
+                    <div>Route Efficiency</div>
+                </div>
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="filter-controls">
+                <div>
+                    <label><strong>Time Range:</strong></label>
+                    <select id="timeFilter">
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                </div>
+                <div>
+                    <label><strong>Zone:</strong></label>
+                    <select id="zoneFilter">
+                        <option value="all">All Zones</option>
+                        <option value="north">North Zone</option>
+                        <option value="south">South Zone</option>
+                        <option value="east">East Zone</option>
+                        <option value="west">West Zone</option>
+                        <option value="central">Central Zone</option>
+                    </select>
+                </div>
+                <div>
+                    <label><strong>Priority:</strong></label>
+                    <select id="priorityFilter">
+                        <option value="all">All Priorities</option>
+                        <option value="high">High Priority</option>
+                        <option value="medium">Medium Priority</option>
+                        <option value="low">Low Priority</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="applyFilters()">
+                    <i class="fas fa-filter"></i> Apply Filters
+                </button>
+                <button class="btn btn-secondary" onclick="resetFilters()">
+                    <i class="fas fa-undo"></i> Reset
+                </button>
+            </div>
+
+            <!-- Main Dashboard -->
+            <div class="main-dashboard">
+                <!-- Heatmap Container -->
+                <div class="heatmap-container">
+                    <div class="heatmap-header">
+                        <h3><i class="fas fa-map-marked-alt"></i> Garbage Heatmap</h3>
+                        <div class="heatmap-controls">
+                            <select id="heatmapMode">
+                                <option value="density">Report Density</option>
+                                <option value="priority">Priority Levels</option>
+                                <option value="age">Report Age</option>
+                            </select>
+                            <button onclick="toggleHeatmap()">
+                                <i class="fas fa-eye" id="heatmapToggleIcon"></i>
+                            </button>
+                            <button onclick="refreshHeatmap()">
+                                <i class="fas fa-sync"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="heatmapCanvas"></div>
+                </div>
+
+                <!-- Recent Reports Panel -->
+                <div class="reports-panel">
+                    <div class="reports-header">
+                        <h3><i class="fas fa-list"></i> Live Reports</h3>
+                    </div>
+                    <div id="recentReportsList">
+                        <!-- Reports will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Route Optimization Panel -->
+            <div class="route-optimization">
+                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                    <i class="fas fa-route"></i> Route Optimization
+                </h3>
+                <div class="route-controls">
+                    <button class="btn btn-primary" onclick="optimizeRoutes()">
+                        <i class="fas fa-magic"></i> Optimize Routes
+                    </button>
+                    <button class="btn btn-secondary" onclick="viewCurrentRoutes()">
+                        <i class="fas fa-eye"></i> View Current Routes
+                    </button>
+                    <button class="btn btn-warning" onclick="emergencyDispatch()">
+                        <i class="fas fa-exclamation-triangle"></i> Emergency Dispatch
+                    </button>
+                    <button class="btn btn-success" onclick="downloadReport()">
+                        <i class="fas fa-download"></i> Download Report
+                    </button>
+                </div>
+                <div class="route-info">
+                    <div class="route-stat">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--primary-color);" id="totalDistance">234 km</div>
+                        <div style="color: var(--gray-color);">Total Distance Today</div>
+                    </div>
+                    <div class="route-stat">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--secondary-color);" id="fuelSaved">₹12,500</div>
+                        <div style="color: var(--gray-color);">Fuel Saved</div>
+                    </div>
+                    <div class="route-stat">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--success-color);" id="avgResponseTime">2.3 hrs</div>
+                        <div style="color: var(--gray-color);">Avg Response Time</div>
+                    </div>
+                    <div class="route-stat">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--warning-color);" id="trucksDeployed">18</div>
+                        <div style="color: var(--gray-color);">Trucks Deployed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (simplified) -->
+    <footer class="footer">
+        <div class="container">
+            <div style="text-align: center; padding: 2rem 0;">
+                <p>&copy; 2024 BBMP. All rights reserved. | Admin Dashboard</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        let map;
+        let heatmapVisible = true;
+        let garbageReports = [];
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeHeatmap();
+            loadGarbageReports();
+            updateDashboardStats();
+            startRealTimeUpdates();
+        });
+
+        // Initialize the heatmap
+        function initializeHeatmap() {
+            map = L.map('heatmapCanvas').setView([12.9716, 77.5946], 11); // Bengaluru
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Generate sample garbage report data
+            generateSampleReports();
+            displayHeatmap();
+        }
+
+        // Generate sample garbage reports for demonstration
+        function generateSampleReports() {
+            const bengaluruBounds = {
+                north: 13.1500,
+                south: 12.7500,
+                east: 77.8500,
+                west: 77.3500
+            };
+
+            garbageReports = [];
+            const priorities = ['high', 'medium', 'low'];
+            const areas = ['Indiranagar', 'Koramangala', 'Jayanagar', 'Whitefield', 'HSR Layout', 'BTM Layout', 'Marathahalli', 'Electronic City'];
+
+            for (let i = 0; i < 150; i++) {
+                const lat = bengaluruBounds.south + (bengaluruBounds.north - bengaluruBounds.south) * Math.random();
+                const lng = bengaluruBounds.west + (bengaluruBounds.east - bengaluruBounds.west) * Math.random();
+                
+                garbageReports.push({
+                    id: `GR${Date.now()}${i}`,
+                    lat: lat,
+                    lng: lng,
+                    priority: priorities[Math.floor(Math.random() * priorities.length)],
+                    area: areas[Math.floor(Math.random() * areas.length)],
+                    timestamp: new Date(Date.now() - Math.random() * 86400000 * 7), // Random within last 7 days
+                    status: Math.random() > 0.3 ? 'pending' : 'resolved',
+                    reportType: ['household', 'construction', 'plastic', 'organic'][Math.floor(Math.random() * 4)]
+                });
+            }
+        }
+
+        // Display heatmap on the map
+        function displayHeatmap() {
+            // Clear existing markers
+            map.eachLayer(layer => {
+                if (layer instanceof L.CircleMarker) {
+                    map.removeLayer(layer);
+                }
+            });
+
+            if (!heatmapVisible) return;
+
+            const mode = document.getElementById('heatmapMode').value;
+            
+            garbageReports.forEach(report => {
+                if (report.status === 'resolved' && mode !== 'age') return;
+
+                let color, radius;
+                
+                switch (mode) {
+                    case 'priority':
+                        color = report.priority === 'high' ? '#dc3545' : 
+                               report.priority === 'medium' ? '#ffc107' : '#28a745';
+                        radius = report.priority === 'high' ? 12 : 
+                                report.priority === 'medium' ? 8 : 6;
+                        break;
+                    case 'age':
+                        const ageHours = (Date.now() - report.timestamp) / (1000 * 60 * 60);
+                        color = ageHours > 24 ? '#dc3545' : ageHours > 12 ? '#ffc107' : '#28a745';
+                        radius = 8;
+                        break;
+                    default: // density
+                        color = '#ff6b35';
+                        radius = 6;
+                }
+
+                const marker = L.circleMarker([report.lat, report.lng], {
+                    color: color,
+                    fillColor: color,
+                    fillOpacity: 0.7,
+                    radius: radius
+                }).addTo(map);
+
+                marker.bindPopup(`
+                    <strong>Report ID:</strong> ${report.id}<br>
+                    <strong>Priority:</strong> ${report.priority}<br>
+                    <strong>Area:</strong> ${report.area}<br>
+                    <strong>Type:</strong> ${report.reportType}<br>
+                    <strong>Status:</strong> ${report.status}<br>
+                    <strong>Time:</strong> ${report.timestamp.toLocaleString()}
+                `);
+            });
+        }
+
+        // Load and display recent reports
+        function loadGarbageReports() {
+            const reportsList = document.getElementById('recentReportsList');
+            const recentReports = garbageReports
+                .filter(report => report.status === 'pending')
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                .slice(0, 15);
+
+            reportsList.innerHTML = '';
+            
+            recentReports.forEach(report => {
+                const reportItem = document.createElement('div');
+                reportItem.className = 'report-item';
+                reportItem.innerHTML = `
+                    <div>
+                        <div style="font-weight: 500;">${report.area}</div>
+                        <div style="font-size: 0.9rem; color: var(--gray-color);">
+                            ${getTimeAgo(report.timestamp)} • ${report.reportType}
+                        </div>
+                    </div>
+                    <div>
+                        <span class="priority-badge priority-${report.priority}">${report.priority}</span>
+                    </div>
+                `;
+                
+                reportItem.addEventListener('click', () => {
+                    map.setView([report.lat, report.lng], 16);
+                    // Find and open the corresponding marker popup
+                    map.eachLayer(layer => {
+                        if (layer instanceof L.CircleMarker) {
+                            const latLng = layer.getLatLng();
+                            if (Math.abs(latLng.lat - report.lat) < 0.001 && Math.abs(latLng.lng - report.lng) < 0.001) {
+                                layer.openPopup();
+                            }
+                        }
+                    });
+                });
+                
+                reportsList.appendChild(reportItem);
+            });
+        }
+
+        // Update dashboard statistics
+        function updateDashboardStats() {
+            const pendingReports = garbageReports.filter(r => r.status === 'pending').length;
+            const resolvedToday = garbageReports.filter(r => {
+                const today = new Date();
+                const reportDate = new Date(r.timestamp);
+                return r.status === 'resolved' && 
+                       reportDate.toDateString() === today.toDateString();
+            }).length;
+
+            document.getElementById('pendingReports').textContent = pendingReports;
+            document.getElementById('resolvedToday').textContent = resolvedToday;
+            document.getElementById('activeTrucks').textContent = Math.floor(Math.random() * 10) + 20;
+            document.getElementById('routeEfficiency').textContent = (85 + Math.random() * 10).toFixed(0) + '%';
+        }
+
+        // Helper function to get time ago
+        function getTimeAgo(timestamp) {
+            const now = new Date();
+            const diffMs = now - timestamp;
+            const diffMins = Math.floor(diffMs / (1000 * 60));
+            const diffHours = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHours / 24);
+
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            return `${diffDays}d ago`;
+        }
+
+        // Control functions
+        function toggleHeatmap() {
+            heatmapVisible = !heatmapVisible;
+            const icon = document.getElementById('heatmapToggleIcon');
+            icon.className = heatmapVisible ? 'fas fa-eye' : 'fas fa-eye-slash';
+            displayHeatmap();
+        }
+
+        function refreshHeatmap() {
+            generateSampleReports();
+            displayHeatmap();
+            loadGarbageReports();
+            updateDashboardStats();
+        }
+
+        function applyFilters() {
+            // Implementation for filtering
+            const timeFilter = document.getElementById('timeFilter').value;
+            const zoneFilter = document.getElementById('zoneFilter').value;
+            const priorityFilter = document.getElementById('priorityFilter').value;
+            
+            // Apply filters and refresh display
+            displayHeatmap();
+            loadGarbageReports();
+            showNotification('Filters applied successfully', 'success');
+        }
+
+        function resetFilters() {
+            document.getElementById('timeFilter').value = 'today';
+            document.getElementById('zoneFilter').value = 'all';
+            document.getElementById('priorityFilter').value = 'all';
+            applyFilters();
+        }
+
+        function optimizeRoutes() {
+            showNotification('Route optimization in progress...', 'info');
+            setTimeout(() => {
+                document.getElementById('totalDistance').textContent = (200 + Math.random() * 50).toFixed(0) + ' km';
+                document.getElementById('fuelSaved').textContent = '₹' + (10000 + Math.random() * 5000).toFixed(0);
+                document.getElementById('routeEfficiency').textContent = (88 + Math.random() * 8).toFixed(0) + '%';
+                showNotification('Routes optimized successfully! 15% efficiency improvement.', 'success');
+            }, 3000);
+        }
+
+        function viewCurrentRoutes() {
+            showNotification('Loading current routes...', 'info');
+            // Implementation for showing current routes
+        }
+
+        function emergencyDispatch() {
+            const confirmed = confirm('Deploy emergency collection team? This will prioritize high-priority reports.');
+            if (confirmed) {
+                showNotification('Emergency dispatch activated! Teams deployed to high-priority areas.', 'warning');
+            }
+        }
+
+        function downloadReport() {
+            showNotification('Generating comprehensive report...', 'info');
+            setTimeout(() => {
+                // Create a simple CSV download
+                const csvContent = "data:text/csv;charset=utf-8," +
+                    "Report ID,Area,Priority,Status,Timestamp\n" +
+                    garbageReports.slice(0, 50).map(r => 
+                        `${r.id},${r.area},${r.priority},${r.status},${r.timestamp.toISOString()}`
+                    ).join("\n");
+                
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "garbage_reports.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showNotification('Report downloaded successfully!', 'success');
+            }, 2000);
+        }
+
+        // Real-time updates
+        function startRealTimeUpdates() {
+            setInterval(() => {
+                // Simulate new reports
+                if (Math.random() > 0.8) {
+                    const newReport = {
+                        id: `GR${Date.now()}`,
+                        lat: 12.9716 + (Math.random() - 0.5) * 0.3,
+                        lng: 77.5946 + (Math.random() - 0.5) * 0.3,
+                        priority: ['high', 'medium', 'low'][Math.floor(Math.random() * 3)],
+                        area: ['Indiranagar', 'Koramangala', 'Jayanagar'][Math.floor(Math.random() * 3)],
+                        timestamp: new Date(),
+                        status: 'pending',
+                        reportType: 'household'
+                    };
+                    
+                    garbageReports.unshift(newReport);
+                    displayHeatmap();
+                    loadGarbageReports();
+                    updateDashboardStats();
+                }
+                
+                // Update last updated time
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+            }, 10000); // Update every 10 seconds
+        }
+
+        // Event listeners for heatmap mode changes
+        document.getElementById('heatmapMode').addEventListener('change', displayHeatmap);
+
+        // Notification function
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'success' ? '#28a745' : type === 'warning' ? '#ffc107' : type === 'error' ? '#dc3545' : '#007bff'};
+                color: ${type === 'warning' ? '#212529' : 'white'};
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                z-index: 10000;
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+                max-width: 400px;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.style.transform = 'translateX(0)', 10);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
