@@ -1,4 +1,4 @@
-# SMART BBMP Waste Management System
+# Clean-Scene Waste Management System
 
 A comprehensive digital platform for smart waste collection, route optimization, and citizen reporting in Bengaluru.
 

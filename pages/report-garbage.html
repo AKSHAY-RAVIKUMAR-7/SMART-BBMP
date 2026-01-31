@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report Garbage - SMART BBMP</title>
+    <title>Report Garbage - Clean-Scene</title>
     <link rel="stylesheet" href="../css/styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="../js/ai-image-recognition.js"></script>
+    <script src="../js/chatbot.js"></script>
     <style>
         .report-header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -78,6 +80,54 @@
             align-items: center;
             justify-content: center;
         }
+        .ai-analysis-badge {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .ai-results {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+        }
+        .ai-results h4 {
+            margin: 0 0 0.75rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .ai-result-item {
+            background: rgba(255,255,255,0.15);
+            padding: 0.5rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .confidence-bar {
+            width: 100px;
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .confidence-fill {
+            height: 100%;
+            background: #4caf50;
+            transition: width 0.5s ease;
+        }
         .location-info {
             background: var(--light-gray);
             padding: 1rem;
@@ -118,16 +168,27 @@
         <nav class="navbar">
             <div class="nav-container">
                 <div class="nav-logo">
-                    <img src="../images/bbmp-logo.png" alt="BBMP Logo" class="logo-img">
+                    <i class="fas fa-leaf" style="font-size: 2.5rem; color: var(--primary-color); margin-right: 12px;"></i>
                     <div class="logo-text">
-                        <h2>SMART BBMP</h2>
+                        <h2>Clean-Scene</h2>
                         <p>Waste Management</p>
                     </div>
                 </div>
                 <div class="nav-menu">
                     <a href="../index.html" class="nav-link">Home</a>
-                    <a href="../index.html#services" class="nav-link">Services</a>
-                    <a href="admin-dashboard.html" class="nav-link">Heatmap</a>
+                    <div class="nav-dropdown">
+                        <a href="#" class="nav-link">Services <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="property-tax.html"><i class="fas fa-home"></i> Property Tax</a>
+                            <a href="trade-license.html"><i class="fas fa-certificate"></i> Trade License</a>
+                            <a href="birth-certificate.html"><i class="fas fa-baby"></i> Birth Certificate</a>
+                            <a href="building-permit.html"><i class="fas fa-building"></i> Building Permit</a>
+                            <a href="report-garbage.html"><i class="fas fa-trash"></i> Report Garbage</a>
+                            <a href="track-collection.html"><i class="fas fa-map-marker-alt"></i> Track Collection</a>
+                        </div>
+                    </div>
+                    <a href="../index.html#portals" class="nav-link">Portals</a>
+                    <a href="citizen-dashboard.html" class="nav-link">My Dashboard</a>
                     <a href="../index.html#contact" class="nav-link">Contact</a>
                     <a href="citizen-login.html" class="nav-link login-btn">Login</a>
                 </div>
@@ -173,12 +234,15 @@
                             <div class="form-section">
                                 <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
                                     <i class="fas fa-camera"></i> Upload Photos
+                                    <span style="font-size: 0.75rem; font-weight: normal; color: #667eea; margin-left: 0.5rem;">
+                                        <i class="fas fa-brain"></i> AI-Powered Detection
+                                    </span>
                                 </h3>
                                 <div class="camera-section" id="cameraSection">
                                     <i class="fas fa-camera" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
                                     <h4>Take or Upload Photos</h4>
                                     <p style="margin-bottom: 1.5rem; color: var(--gray-color);">
-                                        Capture clear images of the garbage location
+                                        Our AI will automatically analyze images to detect garbage type & severity
                                     </p>
                                     <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
                                         <button type="button" class="btn btn-primary" onclick="capturePhoto()">
@@ -191,6 +255,7 @@
                                     <input type="file" id="photoInput" accept="image/*" multiple capture="camera" style="display: none;" onchange="handlePhotoUpload(this)">
                                 </div>
                                 <div id="photoPreview" class="photo-preview"></div>
+                                <div id="aiAnalysisResults"></div>
                             </div>
 
                             <!-- Location Section -->
@@ -388,6 +453,7 @@
         let currentLocation = null;
         let uploadedPhotos = [];
         let selectedPriority = null;
+        let aiRecognizer = null;
 
         // Initialize map and get location on page load
         document.addEventListener('DOMContentLoaded', function() {
@@ -396,6 +462,10 @@
             setupPrioritySelection();
             updateLiveStats();
             setInterval(updateLiveStats, 30000); // Update every 30 seconds
+            
+            // Initialize AI Image Recognizer
+            aiRecognizer = new GarbageImageRecognizer();
+            aiRecognizer.initialize();
         });
 
         // Initialize Leaflet map
@@ -497,23 +567,42 @@
             const files = Array.from(input.files);
             const preview = document.getElementById('photoPreview');
             
-            files.forEach(file => {
+            files.forEach(async file => {
                 if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = async function(e) {
+                        const photoId = 'photo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                         const photoItem = document.createElement('div');
                         photoItem.className = 'photo-item';
+                        photoItem.id = photoId;
                         photoItem.innerHTML = `
                             <img src="${e.target.result}" alt="Garbage photo">
                             <button class="photo-remove" onclick="removePhoto(this)">
                                 <i class="fas fa-times"></i>
                             </button>
+                            <div class="ai-analysis-badge">
+                                <i class="fas fa-spinner fa-spin"></i> Analyzing...
+                            </div>
                         `;
                         preview.appendChild(photoItem);
                         uploadedPhotos.push({
                             file: file,
-                            dataUrl: e.target.result
+                            dataUrl: e.target.result,
+                            id: photoId
                         });
+                        
+                        // Run AI analysis
+                        if (aiRecognizer) {
+                            try {
+                                const analysis = await aiRecognizer.analyzeImage(file);
+                                updatePhotoWithAI(photoId, analysis);
+                                displayAIResults(analysis);
+                            } catch (error) {
+                                console.error('AI analysis failed:', error);
+                                const badge = document.querySelector(`#${photoId} .ai-analysis-badge`);
+                                if (badge) badge.remove();
+                            }
+                        }
                     };
                     reader.readAsDataURL(file);
                 }
@@ -521,12 +610,86 @@
             
             input.value = ''; // Clear input
         }
+        
+        function updatePhotoWithAI(photoId, analysis) {
+            const photoItem = document.getElementById(photoId);
+            if (!photoItem) return;
+            
+            const badge = photoItem.querySelector('.ai-analysis-badge');
+            if (badge) {
+                badge.innerHTML = `<i class="fas fa-check-circle"></i> ${analysis.garbageType.type}`;
+            }
+        }
+        
+        function displayAIResults(analysis) {
+            const resultsContainer = document.getElementById('aiAnalysisResults');
+            
+            // Auto-fill form fields based on AI analysis
+            const garbageTypeSelect = document.querySelector('select[name="garbageType"]');
+            if (garbageTypeSelect) {
+                garbageTypeSelect.value = analysis.garbageType.type;
+            }
+            
+            const estimatedSizeSelect = document.querySelector('select[name="estimatedSize"]');
+            if (estimatedSizeSelect && analysis.estimatedVolume) {
+                if (analysis.estimatedVolume.includes('Small')) estimatedSizeSelect.value = 'small';
+                else if (analysis.estimatedVolume.includes('Medium')) estimatedSizeSelect.value = 'medium';
+                else if (analysis.estimatedVolume.includes('Large') && !analysis.estimatedVolume.includes('Very')) estimatedSizeSelect.value = 'large';
+                else if (analysis.estimatedVolume.includes('Very Large')) estimatedSizeSelect.value = 'very-large';
+            }
+            
+            // Auto-select priority based on severity
+            if (analysis.severity.priority === 'high') {
+                document.querySelector('.priority-option[data-priority="high"]')?.click();
+            } else if (analysis.severity.priority === 'medium') {
+                document.querySelector('.priority-option[data-priority="medium"]')?.click();
+            }
+            
+            // Display AI results
+            resultsContainer.innerHTML = `
+                <div class="ai-results">
+                    <h4><i class="fas fa-brain"></i> AI Analysis Results</h4>
+                    <div class="ai-result-item">
+                        <span><i class="fas fa-tag"></i> Type: ${analysis.garbageType.type}</span>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: ${analysis.confidence}%"></div>
+                        </div>
+                        <span>${analysis.confidence}%</span>
+                    </div>
+                    <div class="ai-result-item">
+                        <span><i class="fas fa-exclamation-triangle"></i> Severity: ${analysis.severity.level}</span>
+                        <span style="text-transform: uppercase; font-weight: 600;">${analysis.severity.priority}</span>
+                    </div>
+                    <div class="ai-result-item">
+                        <span><i class="fas fa-weight"></i> Estimated Volume</span>
+                        <span>${analysis.estimatedVolume}</span>
+                    </div>
+                    ${analysis.illegalDumping.detected ? `
+                    <div class="ai-result-item" style="background: rgba(220, 53, 69, 0.2);">
+                        <span><i class="fas fa-ban"></i> ⚠️ Possible Illegal Dumping Detected</span>
+                        <span>${Math.round(analysis.illegalDumping.confidence)}%</span>
+                    </div>
+                    ` : ''}
+                    <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.3);">
+                        <strong><i class="fas fa-lightbulb"></i> Recommendations:</strong>
+                        <ul style="margin: 0.5rem 0 0 1.5rem; font-size: 0.9rem;">
+                            ${analysis.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
 
         function removePhoto(button) {
             const photoItem = button.parentElement;
             const index = Array.from(photoItem.parentElement.children).indexOf(photoItem);
             uploadedPhotos.splice(index, 1);
             photoItem.remove();
+            
+            // Clear AI results if no photos left
+            if (uploadedPhotos.length === 0) {
+                document.getElementById('aiAnalysisResults').innerHTML = '';
+            }
         }
 
         // Priority selection

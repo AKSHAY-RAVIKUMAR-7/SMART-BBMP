@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birth Certificate - BBMP Clean-Scene</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="../js/chatbot.js"></script>
+    <style>
+        .service-header {
+            background: linear-gradient(135deg, #2C5AA0, #1E88E5);
+            color: white;
+            padding: 120px 0 60px;
+            text-align: center;
+        }
+        .service-content {
+            padding: 60px 0;
+            background: var(--light-gray);
+        }
+        .service-form {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        .form-section {
+            margin-bottom: 2rem;
+        }
+        .form-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .info-box {
+            background: #e3f2fd;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #2196f3;
+            margin-bottom: 2rem;
+        }
+        .document-list {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        .document-list ul {
+            margin: 0.5rem 0 0 1.5rem;
+        }
+        .document-list li {
+            margin: 0.5rem 0;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <i class="fas fa-leaf" style="font-size: 2.5rem; color: var(--primary-color); margin-right: 12px;"></i>
+                    <div class="logo-text">
+                        <h2>Clean-Scene</h2>
+                        <p>BBMP Services</p>
+                    </div>
+                </div>
+                <div class="nav-menu">
+                    <a href="../index.html" class="nav-link">Home</a>
+                    <div class="nav-dropdown">
+                        <a href="#" class="nav-link">Services <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="property-tax.html"><i class="fas fa-rupee-sign"></i> Property Tax</a>
+                            <a href="trade-license.html"><i class="fas fa-store"></i> Trade License</a>
+                            <a href="birth-certificate.html"><i class="fas fa-baby"></i> Birth Certificate</a>
+                            <a href="building-permit.html"><i class="fas fa-building"></i> Building Permit</a>
+                            <a href="report-garbage.html"><i class="fas fa-trash"></i> Report Garbage</a>
+                        </div>
+                    </div>
+                    <a href="#important-links" class="nav-link">Portals</a>
+                    <a href="citizen-login.html" class="nav-link login-btn">Login</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Service Header -->
+    <section class="service-header">
+        <div class="container">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+                <i class="fas fa-baby" style="font-size: 3rem;"></i>
+                <h1>Birth Certificate</h1>
+            </div>
+            <p>Register birth and obtain official birth certificate</p>
+        </div>
+    </section>
+
+    <!-- Service Content -->
+    <section class="service-content">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                <!-- Main Form -->
+                <div>
+                    <div class="info-box">
+                        <h3 style="margin-top: 0;"><i class="fas fa-info-circle"></i> Important Information</h3>
+                        <ul style="margin: 0.5rem 0 0 1.5rem;">
+                            <li>Birth must be registered within 21 days from date of birth</li>
+                            <li>Late registration (after 21 days) requires additional documents</li>
+                            <li>Certificate is issued after verification of documents</li>
+                            <li>Processing time: 7-15 working days</li>
+                        </ul>
+                    </div>
+
+                    <div class="service-form">
+                        <h2 style="color: var(--primary-color); margin-bottom: 1.5rem;">
+                            <i class="fas fa-file-medical"></i> Birth Registration Form
+                        </h2>
+                        
+                        <form id="birthCertificateForm">
+                            <!-- Child Details -->
+                            <div class="form-section">
+                                <h3>
+                                    <i class="fas fa-baby"></i> Child Details
+                                </h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Child Name <span style="color: red;">*</span></label>
+                                        <input type="text" name="childName" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Gender <span style="color: red;">*</span></label>
+                                        <select name="gender" required>
+                                            <option value="">Select Gender</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Date of Birth <span style="color: red;">*</span></label>
+                                        <input type="date" name="dob" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Time of Birth</label>
+                                        <input type="time" name="timeOfBirth">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Place of Birth <span style="color: red;">*</span></label>
+                                        <input type="text" name="placeOfBirth" placeholder="Hospital/Home" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Ward Number</label>
+                                        <input type="text" name="wardNumber" placeholder="e.g., 150">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Father's Details -->
+                            <div class="form-section">
+                                <h3>
+                                    <i class="fas fa-user"></i> Father's Details
+                                </h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Father's Name <span style="color: red;">*</span></label>
+                                        <input type="text" name="fatherName" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Father's Age</label>
+                                        <input type="number" name="fatherAge" min="18" max="100">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Father's Aadhaar Number</label>
+                                        <input type="text" name="fatherAadhaar" pattern="[0-9]{12}" placeholder="XXXX-XXXX-XXXX">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Father's Occupation</label>
+                                        <input type="text" name="fatherOccupation">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mother's Details -->
+                            <div class="form-section">
+                                <h3>
+                                    <i class="fas fa-user"></i> Mother's Details
+                                </h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Mother's Name <span style="color: red;">*</span></label>
+                                        <input type="text" name="motherName" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Mother's Age</label>
+                                        <input type="number" name="motherAge" min="18" max="100">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Mother's Aadhaar Number</label>
+                                        <input type="text" name="motherAadhaar" pattern="[0-9]{12}" placeholder="XXXX-XXXX-XXXX">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Mother's Occupation</label>
+                                        <input type="text" name="motherOccupation">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Address Details -->
+                            <div class="form-section">
+                                <h3>
+                                    <i class="fas fa-map-marker-alt"></i> Permanent Address
+                                </h3>
+                                <div class="form-group">
+                                    <label>Address Line 1 <span style="color: red;">*</span></label>
+                                    <input type="text" name="address1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Address Line 2</label>
+                                    <input type="text" name="address2">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>City <span style="color: red;">*</span></label>
+                                        <input type="text" name="city" value="Bengaluru" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>PIN Code <span style="color: red;">*</span></label>
+                                        <input type="text" name="pincode" pattern="[0-9]{6}" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Document Upload -->
+                            <div class="form-section">
+                                <h3>
+                                    <i class="fas fa-upload"></i> Upload Documents
+                                </h3>
+                                <div class="form-group">
+                                    <label>Hospital Birth Certificate (if applicable)</label>
+                                    <input type="file" accept=".pdf,.jpg,.jpeg,.png">
+                                </div>
+                                <div class="form-group">
+                                    <label>Parent's Aadhaar Card</label>
+                                    <input type="file" accept=".pdf,.jpg,.jpeg,.png">
+                                </div>
+                                <div class="form-group">
+                                    <label>Proof of Address</label>
+                                    <input type="file" accept=".pdf,.jpg,.jpeg,.png">
+                                </div>
+                            </div>
+
+                            <!-- Contact Details -->
+                            <div class="form-section">
+                                <h3>
+                                    <i class="fas fa-phone"></i> Contact Details
+                                </h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Mobile Number <span style="color: red;">*</span></label>
+                                        <input type="tel" name="mobile" pattern="[0-9]{10}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email Address</label>
+                                        <input type="email" name="email">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem;">
+                                <i class="fas fa-paper-plane"></i> Submit Birth Registration
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div>
+                    <!-- Required Documents -->
+                    <div class="document-list">
+                        <h3 style="color: var(--primary-color); margin-top: 0;">
+                            <i class="fas fa-file-alt"></i> Required Documents
+                        </h3>
+                        <ul>
+                            <li>Hospital birth certificate (if hospital birth)</li>
+                            <li>Parent's Aadhaar card</li>
+                            <li>Proof of address</li>
+                            <li>Marriage certificate (if available)</li>
+                        </ul>
+                    </div>
+
+                    <!-- Process Timeline -->
+                    <div class="service-form">
+                        <h3 style="color: var(--primary-color); margin-top: 0;">
+                            <i class="fas fa-clock"></i> Process Timeline
+                        </h3>
+                        <div style="padding-left: 1rem; border-left: 3px solid var(--primary-color);">
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Step 1:</strong> Submit Application<br>
+                                <small style="color: #666;">Online form submission</small>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Step 2:</strong> Document Verification<br>
+                                <small style="color: #666;">3-5 working days</small>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Step 3:</strong> Approval<br>
+                                <small style="color: #666;">2-3 working days</small>
+                            </div>
+                            <div>
+                                <strong>Step 4:</strong> Certificate Issuance<br>
+                                <small style="color: #666;">2-3 working days</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Help Section -->
+                    <div class="service-form">
+                        <h3 style="color: var(--primary-color); margin-top: 0;">
+                            <i class="fas fa-question-circle"></i> Need Help?
+                        </h3>
+                        <p style="margin-bottom: 1rem;">For assistance with birth registration:</p>
+                        <div style="font-size: 0.9rem;">
+                            <p><i class="fas fa-phone"></i> Helpline: 1800-123-BBMP</p>
+                            <p><i class="fas fa-envelope"></i> Email: birth@bbmp.gov.in</p>
+                            <p><i class="fas fa-clock"></i> Mon-Sat: 9 AM - 5 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Important Links Section -->
+    <section id="important-links" style="padding: 60px 0; background: white;">
+        <div class="container">
+            <h2 class="section-title">Important Government Portals</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 2rem;">
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #2C5AA0;">
+                    <h3 style="color: var(--primary-color); margin-top: 0;">
+                        <i class="fas fa-file-alt"></i> RTI Portal
+                    </h3>
+                    <p style="margin-bottom: 1rem; font-size: 0.9rem;">Right to Information Act applications</p>
+                    <a href="https://rtionline.karnataka.gov.in/" target="_blank" class="btn btn-secondary" style="display: inline-block;">
+                        Visit Portal <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #2C5AA0;">
+                    <h3 style="color: var(--primary-color); margin-top: 0;">
+                        <i class="fas fa-exclamation-triangle"></i> Grievance Portal
+                    </h3>
+                    <p style="margin-bottom: 1rem; font-size: 0.9rem;">Register and track complaints</p>
+                    <a href="https://sahaaya.karnataka.gov.in/" target="_blank" class="btn btn-secondary" style="display: inline-block;">
+                        Visit Portal <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #2C5AA0;">
+                    <h3 style="color: var(--primary-color); margin-top: 0;">
+                        <i class="fas fa-gavel"></i> Tender Notices
+                    </h3>
+                    <p style="margin-bottom: 1rem; font-size: 0.9rem;">BBMP tender notifications and documents</p>
+                    <a href="https://etenders.karnataka.gov.in/" target="_blank" class="btn btn-secondary" style="display: inline-block;">
+                        Visit Portal <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #2C5AA0;">
+                    <h3 style="color: var(--primary-color); margin-top: 0;">
+                        <i class="fas fa-newspaper"></i> Public Notices
+                    </h3>
+                    <p style="margin-bottom: 1rem; font-size: 0.9rem;">Official announcements and notifications</p>
+                    <a href="https://bbmp.gov.in/en/public-notices" target="_blank" class="btn btn-secondary" style="display: inline-block;">
+                        Visit Portal <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: #2c3e50; color: white; padding: 2rem 0; text-align: center;">
+        <div class="container">
+            <p>&copy; 2026 BBMP Clean-Scene - Digital Bengaluru Initiative</p>
+            <p style="margin-top: 0.5rem; opacity: 0.8;">Bruhat Bengaluru Mahanagara Palike</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('birthCertificateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitButton.disabled = true;
+            
+            setTimeout(() => {
+                const applicationId = 'BC' + Date.now().toString().substr(-8);
+                alert(`Birth Registration Submitted Successfully!\n\nApplication ID: ${applicationId}\n\nYou will receive updates via SMS and email.\n\nExpected processing time: 7-15 working days`);
+                
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+                this.reset();
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

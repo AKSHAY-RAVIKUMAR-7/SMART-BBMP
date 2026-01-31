@@ -1,4 +1,4 @@
-// SMART BBMP Website JavaScript
+// Clean-Scene Website JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all functionality

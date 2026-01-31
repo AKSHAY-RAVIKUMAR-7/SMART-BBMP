@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMART BBMP - Bruhat Bengaluru Mahanagara Palike</title>
+    <title>Clean-Scene - Bruhat Bengaluru Mahanagara Palike</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/chatbot.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -14,17 +15,28 @@
         <nav class="navbar">
             <div class="nav-container">
                 <div class="nav-logo">
-                    <img src="images/bbmp-logo.png" alt="BBMP Logo" class="logo-img">
+                    <i class="fas fa-leaf" style="font-size: 2.5rem; color: var(--primary-color); margin-right: 12px;"></i>
                     <div class="logo-text">
-                        <h2>SMART BBMP</h2>
+                        <h2>Clean-Scene</h2>
                         <p>Digital Bengaluru</p>
                     </div>
                 </div>
                 <div class="nav-menu" id="nav-menu">
                     <a href="#home" class="nav-link">Home</a>
-                    <a href="#services" class="nav-link">Services</a>
+                    <div class="nav-dropdown">
+                        <a href="#services" class="nav-link">Services <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="pages/property-tax.html"><i class="fas fa-rupee-sign"></i> Property Tax</a>
+                            <a href="pages/trade-license.html"><i class="fas fa-store"></i> Trade License</a>
+                            <a href="pages/birth-certificate.html"><i class="fas fa-baby"></i> Birth Certificate</a>
+                            <a href="pages/building-permit.html"><i class="fas fa-building"></i> Building Permit</a>
+                            <a href="pages/report-garbage.html"><i class="fas fa-trash"></i> Report Garbage</a>
+                            <a href="pages/track-collection.html"><i class="fas fa-truck"></i> Track Collection</a>
+                        </div>
+                    </div>
                     <a href="#about" class="nav-link">About</a>
                     <a href="#contact" class="nav-link">Contact</a>
+                    <a href="#portals" class="nav-link">Portals</a>
                     <a href="pages/citizen-login.html" class="nav-link login-btn">Citizen Login</a>
                 </div>
                 <div class="nav-toggle" id="nav-toggle">
@@ -108,7 +120,7 @@
                     </div>
                     <h3>Collection Schedule</h3>
                     <p>Manage and view collection timings</p>
-                    <a href="pages/collection-schedule.html" class="service-link">View Schedule</a>
+                    <a href="pages/track-collection.html" class="service-link">View Schedule</a>
                 </div>
                 <div class="service-card" data-service="waste-analytics">
                     <div class="service-icon">
@@ -116,7 +128,24 @@
                     </div>
                     <h3>Waste Analytics</h3>
                     <p>Data insights and collection statistics</p>
-                    <a href="pages/analytics.html" class="service-link">View Analytics</a>
+                    <a href="pages/admin-dashboard.html" class="service-link">View Analytics</a>
+                </div>
+                <div class="service-card ai-featured" data-service="ai-features" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="service-icon" style="background: rgba(255,255,255,0.2);">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="ai-content">
+                        <h3>🤖 AI-Powered Features</h3>
+                        <p>Experience cutting-edge artificial intelligence with smart image recognition, predictive analytics, and 24/7 intelligent chatbot assistance. Transform waste management with machine learning!</p>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <a href="pages/ai-features-demo.html" class="service-link" style="background: white; color: #667eea; padding: 0.8rem 1.5rem; font-weight: 600;">
+                                <i class="fas fa-rocket"></i> Try AI Demo
+                            </a>
+                            <a href="pages/report-garbage.html" class="service-link" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white; padding: 0.8rem 1.5rem;">
+                                <i class="fas fa-camera"></i> AI Image Analysis
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -235,6 +264,109 @@
                         <h3>Clean Bengaluru 2030</h3>
                         <p>Making Bengaluru the cleanest smart city in India</p>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Important Government Portals -->
+    <section id="portals" style="padding: 80px 0; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+        <div class="container">
+            <h2 class="section-title">Important Government Portals</h2>
+            <p style="text-align: center; max-width: 700px; margin: 0 auto 3rem; color: #666;">
+                Direct access to official Karnataka Government and BBMP portals for various services
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #2C5AA0; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #2C5AA0, #1E88E5); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                        <i class="fas fa-file-alt" style="font-size: 1.8rem; color: white;"></i>
+                    </div>
+                    <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">RTI Portal</h3>
+                    <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: #666;">
+                        File Right to Information Act applications online
+                    </p>
+                    <a href="https://rtionline.karnataka.gov.in/" target="_blank" class="btn btn-primary" style="display: inline-block;">
+                        Visit Portal <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #28a745; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #28a745, #20c997); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 1.8rem; color: white;"></i>
+                    </div>
+                    <h3 style="color: #28a745; margin-bottom: 0.5rem;">Grievance Portal (Sahaaya)</h3>
+                    <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: #666;">
+                        Register and track public grievances and complaints
+                    </p>
+                    <a href="https://sahaaya.karnataka.gov.in/" target="_blank" class="btn btn-primary" style="display: inline-block; background: #28a745;">
+                        Visit Portal <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #ff6b35; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #ff6b35, #ff8552); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                        <i class="fas fa-gavel" style="font-size: 1.8rem; color: white;"></i>
+                    </div>
+                    <h3 style="color: #ff6b35; margin-bottom: 0.5rem;">E-Tender Portal</h3>
+                    <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: #666;">
+                        BBMP tender notifications and documents
+                    </p>
+                    <a href="https://etenders.karnataka.gov.in/" target="_blank" class="btn btn-primary" style="display: inline-block; background: #ff6b35;">
+                        Visit Portal <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #ffc107; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #ffc107, #ffca2c); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                        <i class="fas fa-newspaper" style="font-size: 1.8rem; color: white;"></i>
+                    </div>
+                    <h3 style="color: #ffc107; margin-bottom: 0.5rem;">Public Notices</h3>
+                    <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: #666;">
+                        Official announcements and public notifications
+                    </p>
+                    <a href="https://bbmp.gov.in/en/public-notices" target="_blank" class="btn btn-primary" style="display: inline-block; background: #ffc107; color: #000;">
+                        Visit Portal <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #6f42c1; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #6f42c1, #9b59b6); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                        <i class="fas fa-tasks" style="font-size: 1.8rem; color: white;"></i>
+                    </div>
+                    <h3 style="color: #6f42c1; margin-bottom: 0.5rem;">Sakala Services</h3>
+                    <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: #666;">
+                        Time-bound service delivery monitoring system
+                    </p>
+                    <a href="https://sakala.karnataka.gov.in/" target="_blank" class="btn btn-primary" style="display: inline-block; background: #6f42c1;">
+                        Visit Portal <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+                <div style="background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 4px solid #17a2b8; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #17a2b8, #20c9e0); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                        <i class="fas fa-tint" style="font-size: 1.8rem; color: white;"></i>
+                    </div>
+                    <h3 style="color: #17a2b8; margin-bottom: 0.5rem;">BWSSB Portal</h3>
+                    <p style="margin-bottom: 1.5rem; font-size: 0.9rem; color: #666;">
+                        Water supply and sewerage services for Bangalore
+                    </p>
+                    <a href="https://www.bwssb.gov.in/" target="_blank" class="btn btn-primary" style="display: inline-block; background: #17a2b8;">
+                        Visit Portal <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
+            <div style="margin-top: 3rem; padding: 2rem; background: white; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <h3 style="color: var(--primary-color); margin-bottom: 1rem; text-align: center;">
+                    <i class="fas fa-link"></i> Quick Links
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; text-align: center;">
+                    <a href="https://www.india.gov.in/" target="_blank" style="padding: 1rem; background: #f8f9fa; border-radius: 8px; text-decoration: none; color: #333; transition: all 0.3s;" onmouseover="this.style.background='#e9ecef'" onmouseout="this.style.background='#f8f9fa'">
+                        <i class="fas fa-landmark"></i> India.gov.in
+                    </a>
+                    <a href="https://karnataka.gov.in/" target="_blank" style="padding: 1rem; background: #f8f9fa; border-radius: 8px; text-decoration: none; color: #333; transition: all 0.3s;" onmouseover="this.style.background='#e9ecef'" onmouseout="this.style.background='#f8f9fa'">
+                        <i class="fas fa-flag"></i> Karnataka Portal
+                    </a>
+                    <a href="https://bbmp.gov.in/" target="_blank" style="padding: 1rem; background: #f8f9fa; border-radius: 8px; text-decoration: none; color: #333; transition: all 0.3s;" onmouseover="this.style.background='#e9ecef'" onmouseout="this.style.background='#f8f9fa'">
+                        <i class="fas fa-city"></i> BBMP Official
+                    </a>
+                    <a href="https://bangaloresmart.city/" target="_blank" style="padding: 1rem; background: #f8f9fa; border-radius: 8px; text-decoration: none; color: #333; transition: all 0.3s;" onmouseover="this.style.background='#e9ecef'" onmouseout="this.style.background='#f8f9fa'">
+                        <i class="fas fa-lightbulb"></i> Smart City
+                    </a>
                 </div>
             </div>
         </div>
