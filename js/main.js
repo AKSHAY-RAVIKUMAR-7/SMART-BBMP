@@ -15,6 +15,7 @@ function initNavigation() {
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
     const navLinks = document.querySelectorAll('.nav-link');
+    const dropdowns = document.querySelectorAll('.nav-dropdown');
 
     // Mobile menu toggle
     if (navToggle && navMenu) {
@@ -24,12 +25,44 @@ function initNavigation() {
         });
     }
 
+    // Mobile dropdown toggle
+    dropdowns.forEach(dropdown => {
+        const dropdownLink = dropdown.querySelector('a');
+        if (dropdownLink) {
+            dropdownLink.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    dropdown.classList.toggle('active');
+                    const dropdownContent = dropdown.querySelector('.dropdown-content');
+                    if (dropdownContent) {
+                        dropdownContent.style.display = 
+                            dropdownContent.style.display === 'block' ? 'none' : 'block';
+                    }
+                }
+            });
+        }
+    });
+
     // Close mobile menu when clicking on a link
     navLinks.forEach(link => {
-        link.addEventListener('click', function() {
+        link.addEventListener('click', function(e) {
+            // Don't close if it's a dropdown parent on mobile
+            if (!link.parentElement.classList.contains('nav-dropdown') || window.innerWidth > 768) {
+                navMenu.classList.remove('active');
+                navToggle.classList.remove('active');
+            }
+        });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (navMenu && navToggle && 
+            !navMenu.contains(e.target) && 
+            !navToggle.contains(e.target) && 
+            navMenu.classList.contains('active')) {
             navMenu.classList.remove('active');
             navToggle.classList.remove('active');
-        });
+        }
     });
 
     // Header scroll effect
