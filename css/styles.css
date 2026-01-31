@@ -76,6 +76,8 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
+    z-index: 10002;
+    position: relative;
 }
 
 .logo-img {
@@ -184,6 +186,8 @@ body {
     display: none;
     flex-direction: column;
     cursor: pointer;
+    z-index: 10001;
+    position: relative;
 }
 
 .bar {

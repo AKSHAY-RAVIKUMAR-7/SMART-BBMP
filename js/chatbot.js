@@ -78,7 +78,7 @@ class CleanSceneChatbot {
     addChatbotStyles() {
         const style = document.createElement('style');
         style.textContent = `
-            .chatbot-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
+            .chatbot-container { position: fixed; bottom: 20px; right: 20px; z-index: 999; }
             .chatbot-button {
                 width: 60px; height: 60px; border-radius: 50%;
                 background: linear-gradient(135deg, #2C5AA0, #1E88E5);
