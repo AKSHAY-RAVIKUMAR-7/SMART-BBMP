@@ -78,7 +78,7 @@ class CleanSceneChatbot {
     addChatbotStyles() {
         const style = document.createElement('style');
         style.textContent = `
-            .chatbot-container { position: fixed; bottom: 20px; right: 20px; z-index: 10000; }
+            .chatbot-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
             .chatbot-button {
                 width: 60px; height: 60px; border-radius: 50%;
                 background: linear-gradient(135deg, #2C5AA0, #1E88E5);
@@ -112,6 +112,35 @@ class CleanSceneChatbot {
                 to { opacity: 1; transform: translateY(0); }
             }
             .chatbot-window.active { display: flex; }
+            
+            /* Mobile responsive */
+            @media (max-width: 768px) {
+                .chatbot-container {
+                    bottom: 20px !important;
+                    right: 20px !important;
+                    z-index: 9999 !important;
+                }
+                .chatbot-button {
+                    width: 55px !important;
+                    height: 55px !important;
+                    font-size: 1.3rem !important;
+                }
+                .chatbot-window {
+                    width: calc(100vw - 20px) !important;
+                    height: calc(100vh - 100px) !important;
+                    max-width: 380px !important;
+                    right: -10px !important;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .chatbot-window {
+                    width: calc(100vw - 10px) !important;
+                    right: -160px !important;
+                    bottom: 75px !important;
+                }
+            }
+            
             .chatbot-header {
                 background: linear-gradient(135deg, #2C5AA0, #1E88E5);
                 color: white; padding: 1rem; display: flex;

@@ -796,6 +796,11 @@ body {
 /* Responsive Design */
 @media (max-width: 768px) {
     /* Navigation */
+    .nav-toggle {
+        display: flex !important;
+        z-index: 10001;
+    }
+    
     .nav-menu {
         position: fixed;
         top: 80px;
@@ -810,7 +815,7 @@ body {
         transition: var(--transition);
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         overflow-y: auto;
-        z-index: 999;
+        z-index: 10000;
     }
     
     .nav-menu.active {
@@ -848,7 +853,7 @@ body {
     }
     
     .nav-toggle {
-        display: flex;
+        display: flex !important;
     }
     
     .nav-toggle.active .bar:nth-child(1) {
