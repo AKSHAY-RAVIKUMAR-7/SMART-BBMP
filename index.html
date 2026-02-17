@@ -3,13 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clean-Scene - Bruhat Bengaluru Mahanagara Palike</title>
+    <title>Dashboard - Clean-Scene</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/translations.js"></script>
     <script src="js/chatbot.js"></script>
+    <style>
+        .admin-only { display: none; }
+        .citizen-only { display: none; }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, #2C5AA0, #1E88E5);
+            color: white;
+            padding: 100px 0 40px;
+        }
+        
+        .user-info-bar {
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .driver-contact-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .driver-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .driver-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .driver-card.busy {
+            border-left-color: #ffc107;
+        }
+        
+        .driver-card.offline {
+            border-left-color: #dc3545;
+        }
+        
+        .contact-driver-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 0.5rem;
+        }
+        
+        .contact-driver-btn:hover {
+            background: #218838;
+        }
+    </style>
 </head>
 <body>
+    <!-- Authentication Check Script -->
+    <script>
+        // Check if user is logged in
+        const userRole = sessionStorage.getItem('userRole');
+        const userName = sessionStorage.getItem('userName');
+        
+        if (!userRole || !userName) {
+            // Not logged in, redirect to login page
+            window.location.href = 'login.html';
+        }
+        
+        // Display role-based content
+        window.addEventListener('DOMContentLoaded', function() {
+            if (userRole === 'admin') {
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
+                document.getElementById('dashboardTitle').textContent = 'Admin Dashboard';
+                document.getElementById('dashboardSubtitle').textContent = 'Full System Access - Manage and Monitor';
+            } else if (userRole === 'citizen') {
+                document.querySelectorAll('.citizen-only').forEach(el => el.style.display = 'block');
+                document.getElementById('dashboardTitle').textContent = 'User Dashboard';
+                document.getElementById('dashboardSubtitle').textContent = 'Report and Track Garbage Collection';
+            }
+            
+            // Update user name display
+            document.getElementById('displayUserName').textContent = userName;
+            document.getElementById('displayUserRole').textContent = userRole.charAt(0).toUpperCase() + userRole.slice(1);
+        });
+        
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'login.html';
+        }
+    </script>
     <!-- Header -->
     <header class="header">
         <nav class="navbar">
@@ -22,22 +121,39 @@
                     </div>
                 </div>
                 <div class="nav-menu" id="nav-menu">
-                    <a href="#home" class="nav-link">Home</a>
-                    <div class="nav-dropdown">
-                        <a href="#services" class="nav-link">Services <i class="fas fa-chevron-down"></i></a>
-                        <div class="dropdown-content">
-                            <a href="pages/property-tax.html"><i class="fas fa-rupee-sign"></i> Property Tax</a>
-                            <a href="pages/trade-license.html"><i class="fas fa-store"></i> Trade License</a>
-                            <a href="pages/birth-certificate.html"><i class="fas fa-baby"></i> Birth Certificate</a>
-                            <a href="pages/building-permit.html"><i class="fas fa-building"></i> Building Permit</a>
-                            <a href="pages/report-garbage.html"><i class="fas fa-trash"></i> Report Garbage</a>
-                            <a href="pages/track-collection.html"><i class="fas fa-truck"></i> Track Collection</a>
-                        </div>
-                    </div>
-                    <a href="#about" class="nav-link">About</a>
+                    <a href="#home" class="nav-link" data-translate="home">Dashboard</a>
+                    <a href="#services" class="nav-link" data-translate="services">Services</a>
                     <a href="#contact" class="nav-link">Contact</a>
-                    <a href="#portals" class="nav-link">Portals</a>
-                    <a href="pages/citizen-login.html" class="nav-link login-btn">Citizen Login</a>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <!-- Language Selector -->
+                        <div class="language-selector" style="position: relative;">
+                            <button id="languageBtn" style="background: white; border: 1px solid #ddd; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-globe"></i>
+                                <span id="currentLangText">English</span>
+                                <i class="fas fa-caret-down"></i>
+                            </button>
+                            <div id="languageDropdown" style="display: none; position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); min-width: 150px; z-index: 1000;">
+                                <button onclick="switchLanguage('en')" style="width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='none'">
+                                    <img src="https://flagcdn.com/w20/gb.png" alt="English" style="width: 20px;">
+                                    English
+                                </button>
+                                <button onclick="switchLanguage('kn')" style="width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='none'">
+                                    <img src="https://flagcdn.com/w20/in.png" alt="Kannada" style="width: 20px;">
+                                    ಕನ್ನಡ (Kannada)
+                                </button>
+                                <button onclick="switchLanguage('hi')" style="width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='none'">
+                                    <img src="https://flagcdn.com/w20/in.png" alt="Hindi" style="width: 20px;">
+                                    हिंदी (Hindi)
+                                </button>
+                            </div>
+                        </div>
+                        <span style="color: var(--gray-color); font-size: 0.9rem;">
+                            <i class="fas fa-user-circle"></i> <span id="displayUserName">User</span> (<span id="displayUserRole">Role</span>)
+                        </span>
+                        <button onclick="logout()" class="nav-link login-btn" style="background: #dc3545; border: none; cursor: pointer;">
+                            <i class="fas fa-sign-out-alt"></i> <span data-translate="logout">Logout</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="nav-toggle" id="nav-toggle">
                     <span class="bar"></span>
@@ -48,22 +164,54 @@
         </nav>
     </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
+    <!-- Dashboard Header -->
+    <section id="home" class="dashboard-header">
+        <div class="container">
+            <h1 id="dashboardTitle" style="font-size: 2.5rem; margin-bottom: 1rem;">Dashboard</h1>
+            <p id="dashboardSubtitle" style="font-size: 1.1rem; opacity: 0.9;"></p>
+        </div>
+    </section>
+    
+    <!-- User Info Bar -->
+    <section style="padding: 2rem 0; background: #f8f9fa;">
+        <div class="container">
+            <div class="user-info-bar">
+                <div>
+                    <h3 style="margin: 0; color: var(--dark-color);"><span data-translate="welcomeBack">Welcome back</span>, <span id="displayUserName2">User</span>!</h3>
+                    <p style="margin: 0.25rem 0 0 0; color: var(--gray-color); font-size: 0.9rem;">
+                        <span class="admin-only"><i class="fas fa-shield-alt"></i> <span data-translate="administratorAccess">Administrator Access - Full control over the system</span></span>
+                        <span class="citizen-only"><i class="fas fa-info-circle"></i> <span data-translate="citizenAccess">Citizen Access - Report and track garbage collection</span></span>
+                    </p>
+                </div>
+                <div>
+                    <button onclick="logout()" class="btn" style="background: #dc3545; color: white;">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+            
+            <script>
+                document.getElementById('displayUserName2').textContent = sessionStorage.getItem('userName') || 'User';
+            </script>
+        </div>
+    </section>
+
+    <!-- Hero Welcome Section -->
+    <section class="hero" style="padding: 60px 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
         <div class="hero-container">
             <div class="hero-content">
                 <h1 class="hero-title">
-                    <span class="highlight">SMART</span> Waste Management
+                    <span class="highlight" data-translate="heroTitle">SMART Waste Management</span>
                 </h1>
-                <p class="hero-subtitle">
+                <p class="hero-subtitle" data-translate="heroSubtitle">
                     AI-Powered Garbage Collection & Route Optimization for Clean Bengaluru
                 </p>
                 <div class="hero-buttons">
                     <a href="pages/report-garbage.html" class="btn btn-primary">
-                        <i class="fas fa-camera"></i> Report Garbage
+                        <i class="fas fa-camera"></i> <span data-translate="reportGarbageBtn">Report Garbage</span>
                     </a>
-                    <a href="pages/admin-dashboard.html" class="btn btn-secondary">
-                        <i class="fas fa-map-marked-alt"></i> View Heatmap
+                    <a href="pages/track-collection.html" class="btn btn-secondary">
+                        <i class="fas fa-map-marker-alt"></i> <span data-translate="trackCollectionBtn">Track Collection</span>
                     </a>
                 </div>
             </div>
@@ -78,71 +226,205 @@
     </section>
 
     <!-- Quick Services -->
-    <section class="quick-services">
+    <section id="services" class="quick-services">
         <div class="container">
-            <h2 class="section-title">Waste Management Services</h2>
+            <h2 class="section-title">Available Services</h2>
+            
+            <!-- Admin Only: Driver Management -->
+            <div class="admin-only driver-contact-section">
+                <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">
+                    <i class="fas fa-users"></i> <span data-translate="driverManagement">Driver Management & Contact</span>
+                </h3>
+                <p style="color: var(--gray-color); margin-bottom: 1.5rem;" data-translate="activeDrivers">
+                    Manage and communicate with your collection drivers
+                </p>
+                
+                <div class="driver-list">
+                    <div class="driver-card">
+                        <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+                            <div style="flex: 1;">
+                                <h4 style="margin: 0 0 0.25rem 0; color: var(--dark-color);">Rajesh Kumar</h4>
+                                <p style="margin: 0; color: var(--gray-color); font-size: 0.9rem;">Driver ID: DRV001</p>
+                            </div>
+                            <span style="background: #28a745; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">
+                                <i class="fas fa-circle" style="font-size: 0.6rem;"></i> Active
+                            </span>
+                        </div>
+                        <div style="margin-bottom: 1rem; font-size: 0.9rem;">
+                            <p style="margin: 0.25rem 0;"><i class="fas fa-truck"></i> KA-01-AB-1234</p>
+                            <p style="margin: 0.25rem 0;"><i class="fas fa-route"></i> Route #7 - Indiranagar</p>
+                            <p style="margin: 0.25rem 0;"><i class="fas fa-phone"></i> +91 98765 43210</p>
+                        </div>
+                        <div>
+                            <button class="contact-driver-btn" onclick="contactDriver('DRV001', '+91 98765 43210')">
+                                <i class="fas fa-phone"></i> <span data-translate="callDriver">Call</span>
+                            </button>
+                            <button class="contact-driver-btn" style="background: #17a2b8;" onclick="messageDriver('DRV001')">
+                                <i class="fas fa-comment"></i> <span data-translate="messageDriver">Message</span>
+                            </button>
+                            <button class="contact-driver-btn" style="background: #6c757d;" onclick="viewDriverLocation('DRV001')">
+                                <i class="fas fa-map-marker-alt"></i> <span data-translate="trackDriver">Track</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="driver-card busy">
+                        <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+                            <div style="flex: 1;">
+                                <h4 style="margin: 0 0 0.25rem 0; color: var(--dark-color);">Suresh Reddy</h4>
+                                <p style="margin: 0; color: var(--gray-color); font-size: 0.9rem;">Driver ID: DRV002</p>
+                            </div>
+                            <span style="background: #ffc107; color: #000; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">
+                                <i class="fas fa-circle" style="font-size: 0.6rem;"></i> On Route
+                            </span>
+                        </div>
+                        <div style="margin-bottom: 1rem; font-size: 0.9rem;">
+                            <p style="margin: 0.25rem 0;"><i class="fas fa-truck"></i> KA-01-CD-5678</p>
+                            <p style="margin: 0.25rem 0;"><i class="fas fa-route"></i> Route #12 - Koramangala</p>
+                            <p style="margin: 0.25rem 0;"><i class="fas fa-phone"></i> +91 98765 43211</p>
+                        </div>
+                        <div>
+                            <button class="contact-driver-btn" onclick="contactDriver('DRV002', '+91 98765 43211')">
+                                <i class="fas fa-phone"></i> <span data-translate="callDriver">Call</span>
+                            </button>
+                            <button class="contact-driver-btn" style="background: #17a2b8;" onclick="messageDriver('DRV002')">
+                                <i class="fas fa-comment"></i> <span data-translate="messageDriver">Message</span>
+                            </button>
+                            <button class="contact-driver-btn" style="background: #6c757d;" onclick="viewDriverLocation('DRV002')">
+                                <i class="fas fa-map-marker-alt"></i> <span data-translate="trackDriver">Track</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="driver-card offline">
+                        <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+                            <div style="flex: 1;">
+                                <h4 style="margin: 0 0 0.25rem 0; color: var(--dark-color);">Manjunath Gowda</h4>
+                                <p style="margin: 0; color: var(--gray-color); font-size: 0.9rem;">Driver ID: DRV003</p>
+                            </div>
+                            <span style="background: #dc3545; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">
+                                <i class="fas fa-circle" style="font-size: 0.6rem;"></i> Off Duty
+                            </span>
+                        </div>
+                        <div style="margin-bottom: 1rem; font-size: 0.9rem;">
+                            <p style="margin: 0.25rem 0;"><i class="fas fa-truck"></i> KA-01-EF-9012</p>
+                            <p style="margin: 0.25rem 0;"><i class="fas fa-route"></i> Route #3 - JP Nagar</p>
+                            <p style="margin: 0.25rem 0;"><i class="fas fa-phone"></i> +91 98765 43212</p>
+                        </div>
+                        <div>
+                            <button class="contact-driver-btn" onclick="contactDriver('DRV003', '+91 98765 43212')">
+                                <i class="fas fa-phone"></i> <span data-translate="callDriver">Call</span>
+                            </button>
+                            <button class="contact-driver-btn" style="background: #17a2b8;" onclick="messageDriver('DRV003')">
+                                <i class="fas fa-comment"></i> <span data-translate="messageDriver">Message</span>
+                            </button>
+                            <button class="contact-driver-btn" style="background: #6c757d;" onclick="viewDriverLocation('DRV003')">
+                                <i class="fas fa-map-marker-alt"></i> <span data-translate="trackDriver">Track</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="driver-card">
+                        <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 1rem;">
+                            <div style="flex: 1;">
+                                <h4 style="margin: 0 0 0.25rem 0; color: var(--dark-color);">Prakash Singh</h4>
+                                <p style="margin: 0; color: var(--gray-color); font-size: 0.9rem;">Driver ID: DRV004</p>
+                            </div>
+                            <span style="background: #28a745; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem;">
+                                <i class="fas fa-circle" style="font-size: 0.6rem;"></i> Active
+                            </span>
+                        </div>
+                        <div style="margin-bottom: 1rem; font-size: 0.9rem;">
+                            <p style="margin: 0.25rem 0;"><i class="fas fa-truck"></i> KA-01-GH-3456</p>
+                            <p style="margin: 0.25rem 0;"><i class="fas fa-route"></i> Route #15 - Whitefield</p>
+                            <p style="margin: 0.25rem 0;"><i class="fas fa-phone"></i> +91 98765 43213</p>
+                        </div>
+                        <div>
+                            <button class="contact-driver-btn" onclick="contactDriver('DRV004', '+91 98765 43213')">
+                                <i class="fas fa-phone"></i> <span data-translate="callDriver">Call</span>
+                            </button>
+                            <button class="contact-driver-btn" style="background: #17a2b8;" onclick="messageDriver('DRV004')">
+                                <i class="fas fa-comment"></i> <span data-translate="messageDriver">Message</span>
+                            </button>
+                            <button class="contact-driver-btn" style="background: #6c757d;" onclick="viewDriverLocation('DRV004')">
+                                <i class="fas fa-map-marker-alt"></i> <span data-translate="trackDriver">Track</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 3rem; margin-bottom: 1.5rem; color: var(--dark-color);">
+                <span class="admin-only" data-translate="systemManagement">System Management</span>
+                <span class="citizen-only" data-translate="yourServices">Your Services</span>
+            </h3>
+            
             <div class="services-grid">
                 <div class="service-card" data-service="report-garbage">
                     <div class="service-icon">
                         <i class="fas fa-camera"></i>
                     </div>
-                    <h3>Report Garbage</h3>
-                    <p>Upload photos and location of garbage spots</p>
-                    <a href="pages/report-garbage.html" class="service-link">Report Now</a>
+                    <h3 data-translate="reportGarbage">Report Garbage</h3>
+                    <p data-translate="uploadPhotos">Upload photos and location of garbage spots</p>
+                    <a href="pages/report-garbage.html" class="service-link" data-translate="reportNow">Report Now</a>
                 </div>
                 <div class="service-card" data-service="track-collection">
                     <div class="service-icon">
                         <i class="fas fa-truck"></i>
                     </div>
-                    <h3>Track Collection</h3>
-                    <p>Monitor garbage collection schedule in your area</p>
-                    <a href="pages/track-collection.html" class="service-link">Track Status</a>
+                    <h3 data-translate="trackCollection">Track Collection</h3>
+                    <p data-translate="monitorCollection">Monitor garbage collection schedule in your area</p>
+                    <a href="pages/track-collection.html" class="service-link" data-translate="trackStatus">Track Status</a>
                 </div>
-                <div class="service-card" data-service="route-optimization">
+                
+                <!-- Admin Only Services -->
+                <div class="service-card admin-only" data-service="route-optimization">
                     <div class="service-icon">
                         <i class="fas fa-route"></i>
                     </div>
-                    <h3>Route Optimization</h3>
-                    <p>AI-powered optimal collection routes</p>
-                    <a href="pages/admin-dashboard.html" class="service-link">View Routes</a>
+                    <h3 data-translate="routeOptimization">Route Optimization</h3>
+                    <p data-translate="aiOptimalRoutes">AI-powered optimal collection routes</p>
+                    <a href="pages/admin-dashboard.html" class="service-link" data-translate="viewRoutes">View Routes</a>
                 </div>
-                <div class="service-card" data-service="heatmap-analysis">
+                <div class="service-card admin-only" data-service="heatmap-analysis">
                     <div class="service-icon">
                         <i class="fas fa-map-marked-alt"></i>
                     </div>
-                    <h3>Garbage Heatmap</h3>
-                    <p>Visual analytics of waste concentration areas</p>
-                    <a href="pages/admin-dashboard.html" class="service-link">View Heatmap</a>
+                    <h3 data-translate="garbageHeatmap">Garbage Heatmap</h3>
+                    <p data-translate="visualAnalytics">Visual analytics of waste concentration areas</p>
+                    <a href="pages/admin-dashboard.html" class="service-link" data-translate="viewHeatmap">View Heatmap</a>
                 </div>
+                
+                <!-- Common Services -->
                 <div class="service-card" data-service="collection-schedule">
                     <div class="service-icon">
                         <i class="fas fa-calendar-alt"></i>
                     </div>
-                    <h3>Collection Schedule</h3>
-                    <p>Manage and view collection timings</p>
-                    <a href="pages/track-collection.html" class="service-link">View Schedule</a>
+                    <h3 data-translate="collectionSchedule">Collection Schedule</h3>
+                    <p data-translate="manageSchedule">Manage and view collection timings</p>
+                    <a href="pages/track-collection.html" class="service-link" data-translate="viewSchedule">View Schedule</a>
                 </div>
-                <div class="service-card" data-service="waste-analytics">
+                <div class="service-card admin-only" data-service="waste-analytics">
                     <div class="service-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3>Waste Analytics</h3>
-                    <p>Data insights and collection statistics</p>
-                    <a href="pages/admin-dashboard.html" class="service-link">View Analytics</a>
+                    <h3 data-translate="wasteAnalytics">Waste Analytics</h3>
+                    <p data-translate="dataInsights">Data insights and collection statistics</p>
+                    <a href="pages/admin-dashboard.html" class="service-link" data-translate="viewAnalytics">View Analytics</a>
                 </div>
                 <div class="service-card ai-featured" data-service="ai-features" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
                     <div class="service-icon" style="background: rgba(255,255,255,0.2);">
                         <i class="fas fa-brain"></i>
                     </div>
                     <div class="ai-content">
-                        <h3>🤖 AI-Powered Features</h3>
-                        <p>Experience cutting-edge artificial intelligence with smart image recognition, predictive analytics, and 24/7 intelligent chatbot assistance. Transform waste management with machine learning!</p>
+                        <h3 data-translate="aiPoweredFeatures">🤖 AI-Powered Features</h3>
+                        <p data-translate="aiDescription">Experience cutting-edge artificial intelligence with smart image recognition, predictive analytics, and 24/7 intelligent chatbot assistance. Transform waste management with machine learning!</p>
                         <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
                             <a href="pages/ai-features-demo.html" class="service-link" style="background: white; color: #667eea; padding: 0.8rem 1.5rem; font-weight: 600;">
-                                <i class="fas fa-rocket"></i> Try AI Demo
+                                <i class="fas fa-rocket"></i> <span data-translate="tryAIDemo">Try AI Demo</span>
                             </a>
                             <a href="pages/report-garbage.html" class="service-link" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white; padding: 0.8rem 1.5rem;">
-                                <i class="fas fa-camera"></i> AI Image Analysis
+                                <i class="fas fa-camera"></i> <span data-translate="aiImageAnalysis">AI Image Analysis</span>
                             </a>
                         </div>
                     </div>
@@ -154,19 +436,19 @@
     <!-- Smart Initiatives -->
     <section id="services" class="smart-initiatives">
         <div class="container">
-            <h2 class="section-title">Smart Waste Management Features</h2>
+            <h2 class="section-title" data-translate="smartWasteFeatures">Smart Waste Management Features</h2>
             <div class="initiatives-grid">
                 <div class="initiative-card">
                     <div class="initiative-image">
                         <i class="fas fa-map-marked-alt"></i>
                     </div>
                     <div class="initiative-content">
-                        <h3>Real-time Garbage Heatmap</h3>
-                        <p>Interactive visualization of waste concentration across Bengaluru</p>
+                        <h3 data-translate="realtimeHeatmap">Real-time Garbage Heatmap</h3>
+                        <p data-translate="heatmapDesc">Interactive visualization of waste concentration across Bengaluru</p>
                         <ul>
-                            <li>Live garbage hotspot tracking</li>
-                            <li>Citizen reporting integration</li>
-                            <li>Priority zone identification</li>
+                            <li data-translate="liveHotspotTracking">Live garbage hotspot tracking</li>
+                            <li data-translate="citizenReportingIntegration">Citizen reporting integration</li>
+                            <li data-translate="priorityZoneId">Priority zone identification</li>
                         </ul>
                     </div>
                 </div>
@@ -175,12 +457,12 @@
                         <i class="fas fa-route"></i>
                     </div>
                     <div class="initiative-content">
-                        <h3>AI Route Optimization</h3>
-                        <p>Machine learning algorithms for efficient collection routes</p>
+                        <h3 data-translate="aiRouteOptimization">AI Route Optimization</h3>
+                        <p data-translate="mlAlgorithms">Machine learning algorithms for efficient collection routes</p>
                         <ul>
-                            <li>Dynamic route planning</li>
-                            <li>Traffic-aware optimization</li>
-                            <li>Fuel efficiency maximization</li>
+                            <li data-translate="dynamicRoutePlanning">Dynamic route planning</li>
+                            <li data-translate="trafficAwareOptimization">Traffic-aware optimization</li>
+                            <li data-translate="fuelEfficiency">Fuel efficiency maximization</li>
                         </ul>
                     </div>
                 </div>
@@ -189,12 +471,12 @@
                         <i class="fas fa-mobile-alt"></i>
                     </div>
                     <div class="initiative-content">
-                        <h3>Mobile Garbage Reporting</h3>
-                        <p>Easy citizen reporting with GPS and photo upload</p>
+                        <h3 data-translate="mobileReporting">Mobile Garbage Reporting</h3>
+                        <p data-translate="easyReporting">Easy citizen reporting with GPS and photo upload</p>
                         <ul>
-                            <li>One-click photo capture</li>
-                            <li>Automatic location tagging</li>
-                            <li>Real-time status updates</li>
+                            <li data-translate="oneClickCapture">One-click photo capture</li>
+                            <li data-translate="autoLocationTag">Automatic location tagging</li>
+                            <li data-translate="realtimeUpdates">Real-time status updates</li>
                         </ul>
                     </div>
                 </div>
@@ -208,19 +490,19 @@
             <div class="stats-grid">
                 <div class="stat-item">
                     <div class="stat-number" data-count="25000">0</div>
-                    <div class="stat-label">Garbage Reports</div>
+                    <div class="stat-label" data-translate="garbageReports">Garbage Reports</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number" data-count="500">0</div>
-                    <div class="stat-label">Collection Trucks</div>
+                    <div class="stat-label" data-translate="collectionTrucks">Collection Trucks</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number" data-count="1200">0</div>
-                    <div class="stat-label">Daily Collections</div>
+                    <div class="stat-label" data-translate="dailyCollections">Daily Collections</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number" data-count="85">0</div>
-                    <div class="stat-label">% Route Efficiency</div>
+                    <div class="stat-label" data-translate="routeEfficiency">% Route Efficiency</div>
                 </div>
             </div>
         </div>
@@ -231,38 +513,38 @@
         <div class="container">
             <div class="about-content">
                 <div class="about-text">
-                    <h2>About SMART Waste Management</h2>
-                    <p>
+                    <h2 data-translate="aboutWasteManagement">About SMART Waste Management</h2>
+                    <p data-translate="aboutDesc1">
                         BBMP's revolutionary waste management system leverages cutting-edge AI and IoT technologies 
                         to optimize garbage collection routes, reduce operational costs, and maintain city cleanliness.
                     </p>
-                    <p>
+                    <p data-translate="aboutDesc2">
                         Our citizen-centric approach allows real-time garbage reporting with photo uploads and GPS location, 
                         enabling data-driven decision making for efficient waste collection across Bengaluru.
                     </p>
                     <div class="about-features">
                         <div class="feature-item">
                             <i class="fas fa-check-circle"></i>
-                            <span>Real-time Garbage Tracking</span>
+                            <span data-translate="realtimeTracking">Real-time Garbage Tracking</span>
                         </div>
                         <div class="feature-item">
                             <i class="fas fa-check-circle"></i>
-                            <span>AI-Powered Route Optimization</span>
+                            <span data-translate="aiRouteOpt">AI-Powered Route Optimization</span>
                         </div>
                         <div class="feature-item">
                             <i class="fas fa-check-circle"></i>
-                            <span>Citizen Photo Reporting</span>
+                            <span data-translate="citizenPhotoReporting">Citizen Photo Reporting</span>
                         </div>
                         <div class="feature-item">
                             <i class="fas fa-check-circle"></i>
-                            <span>Interactive Heatmap Analytics</span>
+                            <span data-translate="heatmapAnalytics">Interactive Heatmap Analytics</span>
                         </div>
                     </div>
                 </div>
                 <div class="about-image">
                     <div class="about-card">
-                        <h3>Clean Bengaluru 2030</h3>
-                        <p>Making Bengaluru the cleanest smart city in India</p>
+                        <h3 data-translate="cleanBengaluru2030">Clean Bengaluru 2030</h3>
+                        <p data-translate="cleanestCity">Making Bengaluru the cleanest smart city in India</p>
                     </div>
                 </div>
             </div>
@@ -477,6 +759,86 @@
             </div>
         </div>
     </footer>
+
+    <!-- Driver Contact Scripts -->
+    <script>
+        // Driver contact functions for admin
+        function contactDriver(driverId, phoneNumber) {
+            if (confirm(`Call driver ${driverId} at ${phoneNumber}?`)) {
+                alert(`Initiating call to ${phoneNumber}...\n\nIn a production environment, this would:\n- Use WebRTC for direct calling\n- Integrate with phone system\n- Log the call in system`);
+                // In production: window.location.href = 'tel:' + phoneNumber;
+            }
+        }
+        
+        function messageDriver(driverId) {
+            const message = prompt(`Send message to driver ${driverId}:`);
+            if (message) {
+                alert(`Message sent to driver ${driverId}:\n"${message}"\n\nIn production, this would:\n- Send SMS/WhatsApp\n- Store in message database\n- Send push notification to driver app`);
+            }
+        }
+        
+        function viewDriverLocation(driverId) {
+            alert(`Tracking driver ${driverId}...\n\nIn production, this would:\n- Show live GPS location on map\n- Display route progress\n- Show estimated arrival times\n- Open real-time tracking interface`);
+            // In production: redirect to tracking page with driver ID
+        }
+    </script>
+
+    <!-- Language Switching Script -->
+    <script>
+        // Toggle language dropdown
+        document.getElementById('languageBtn')?.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = document.getElementById('languageDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('languageDropdown');
+            if (dropdown && !e.target.closest('.language-selector')) {
+                dropdown.style.display = 'none';
+            }
+        });
+        
+        // Switch language function
+        function switchLanguage(lang) {
+            languageManager.setLanguage(lang);
+            
+            // Update current language display
+            const langNames = {
+                en: 'English',
+                kn: 'ಕನ್ನಡ',
+                hi: 'हिंदी'
+            };
+            document.getElementById('currentLangText').textContent = langNames[lang];
+            
+            // Close dropdown
+            document.getElementById('languageDropdown').style.display = 'none';
+            
+            // Translate dynamic content
+            translateDynamicContent();
+        }
+        
+        // Translate dynamic content that's not using data-translate attributes
+        function translateDynamicContent() {
+            const lang = languageManager.getCurrentLanguage();
+            
+            // Update document title
+            document.title = languageManager.translate('home') + ' - Clean-Scene';
+        }
+        
+        // Initialize language on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const currentLang = languageManager.getCurrentLanguage();
+            const langNames = {
+                en: 'English',
+                kn: 'ಕನ್ನಡ',
+                hi: 'हिंदी'
+            };
+            document.getElementById('currentLangText').textContent = langNames[currentLang];
+            translateDynamicContent();
+        });
+    </script>
 
     <script src="js/main.js"></script>
 </body>

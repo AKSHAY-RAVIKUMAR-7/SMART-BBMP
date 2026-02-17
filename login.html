@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Clean-Scene BBMP</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="js/translations.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem 0;
+        }
+        .login-box {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        .login-form-section {
+            padding: 3rem;
+        }
+        .login-info-section {
+            background: linear-gradient(135deg, #2C5AA0, #1E88E5);
+            color: white;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .login-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            background: #f8f9fa;
+            padding: 0.25rem;
+        }
+        .login-tab {
+            flex: 1;
+            padding: 0.75rem;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .login-tab.active {
+            background: #2C5AA0;
+            color: white;
+        }
+        .login-form {
+            display: none;
+        }
+        .login-form.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2C5AA0;
+        }
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #2C5AA0;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #1E88E5;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 90, 160, 0.3);
+        }
+        @media (max-width: 768px) {
+            .login-box {
+                grid-template-columns: 1fr;
+            }
+            .login-info-section {
+                order: -1;
+                padding: 2rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="container">
+            <div class="login-box">
+                <!-- Login Form Section -->
+                <div class="login-form-section">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <div style="text-align: center; flex: 1;">
+                            <i class="fas fa-leaf" style="font-size: 3rem; color: #2C5AA0; margin-bottom: 1rem;"></i>
+                            <h2 style="color: #2C5AA0; margin-bottom: 0.5rem;" data-translate="welcomeBack">Clean-Scene Login</h2>
+                            <p style="color: #666;" data-translate="loginSubtitle">Sign in to access your dashboard</p>
+                        </div>
+                        <!-- Language Selector -->
+                        <div class="language-selector" style="position: relative;">
+                            <button type="button" id="languageBtn" style="background: white; border: 1px solid #ddd; padding: 0.5rem 0.75rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-globe"></i>
+                                <span id="currentLangText">EN</span>
+                            </button>
+                            <div id="languageDropdown" style="display: none; position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); min-width: 150px; z-index: 1000;">
+                                <button type="button" onclick="switchLanguage('en')" style="width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='none'">
+                                    English
+                                </button>
+                                <button type="button" onclick="switchLanguage('kn')" style="width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='none'">
+                                    ಕನ್ನಡ
+                                </button>
+                                <button type="button" onclick="switchLanguage('hi')" style="width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='none'">
+                                    हिंदी
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Login Tabs -->
+                    <div class="login-tabs">
+                        <button class="login-tab active" onclick="switchTab('citizen')" type="button">
+                            <i class="fas fa-user"></i> <span data-translate="citizenLogin">User</span>
+                        </button>
+                        <button class="login-tab" onclick="switchTab('admin')" type="button">
+                            <i class="fas fa-user-shield"></i> <span data-translate="adminLogin">Admin</span>
+                        </button>
+                        <button class="login-tab" onclick="switchTab('driver')" type="button">
+                            <i class="fas fa-truck"></i> <span data-translate="driverLogin">Driver</span>
+                        </button>
+                    </div>
+
+                    <!-- User Login Form -->
+                    <form id="citizenLoginForm" class="login-form active">
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> <span data-translate="username">Citizen ID / Mobile Number</span></label>
+                            <input type="text" name="citizenId" data-translate-placeholder="username" placeholder="Enter your Citizen ID or Mobile" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> <span data-translate="password">Password</span></label>
+                            <input type="password" name="password" data-translate-placeholder="password" placeholder="Enter your password" required>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 14px;">
+                                <input type="checkbox" name="remember"> <span data-translate="rememberMe">Remember me</span>
+                            </label>
+                            <a href="#" style="color: #2C5AA0; font-size: 14px; text-decoration: none;" data-translate="forgotPassword">Forgot Password?</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">
+                            <i class="fas fa-sign-in-alt"></i> <span data-translate="loginButton">Sign In as User</span>
+                        </button>
+                        <div style="text-align: center;">
+                            <p style="color: #666; font-size: 14px;">
+                                User access - Report and view only
+                            </p>
+                        </div>
+                    </form>
+
+                    <!-- Admin Login Form -->
+                    <form id="adminLoginForm" class="login-form">
+                        <div class="form-group">
+                            <label><i class="fas fa-id-badge"></i> <span data-translate="adminId">Admin ID</span></label>
+                            <input type="text" name="adminId" data-translate-placeholder="enterAdminId" placeholder="Enter your Admin ID" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> <span data-translate="password">Password</span></label>
+                            <input type="password" name="password" data-translate-placeholder="password" placeholder="Enter your password" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-building"></i> <span data-translate="department">Department</span></label>
+                            <select name="department" required>
+                                <option value="" data-translate="selectDepartment">Select Department</option>
+                                <option value="waste-management" data-translate="wasteManagementDept">Waste Management</option>
+                                <option value="revenue" data-translate="revenueDept">Revenue Department</option>
+                                <option value="health" data-translate="healthDept">Health Department</option>
+                                <option value="engineering" data-translate="engineeringDept">Engineering Department</option>
+                                <option value="admin" data-translate="administrationDept">Administration</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 14px;">
+                                <input type="checkbox" name="remember"> <span data-translate="rememberMe">Remember login</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">
+                            <i class="fas fa-sign-in-alt"></i> <span data-translate="adminLogin">Admin Login</span>
+                        </button>
+                        <div style="text-align: center;">
+                            <p style="color: #666; font-size: 14px;" data-translate="adminAccess">
+                                Admin access - Full system control
+                            </p>
+                        </div>
+                    </form>
+
+                    <!-- Driver Login Form -->
+                    <form id="driverLoginForm" class="login-form">
+                        <div class="form-group">
+                            <label><i class="fas fa-id-card"></i> <span data-translate="driverId">Driver ID</span></label>
+                            <input type="text" name="driverId" data-translate-placeholder="enterDriverId" placeholder="Enter your Driver ID" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> <span data-translate="password">Password</span></label>
+                            <input type="password" name="password" data-translate-placeholder="password" placeholder="Enter your password" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-truck"></i> <span data-translate="vehicleNumber">Vehicle Number</span></label>
+                            <input type="text" name="vehicleNumber" data-translate-placeholder="vehiclePlaceholder" placeholder="e.g., KA-01-AB-1234" required>
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 14px;">
+                                <input type="checkbox" name="remember"> <span data-translate="rememberMe">Remember login</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">
+                            <i class="fas fa-sign-in-alt"></i> <span data-translate="driverLogin">Driver Login</span>
+                        </button>
+                        <div style="text-align: center;">
+                            <p style="color: #666; font-size: 14px;" data-translate="driverAccess">
+                                Driver access - Route management
+                            </p>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Info Section -->
+                <div class="login-info-section">
+                    <div>
+                        <h3 style="font-size: 2rem; margin-bottom: 1rem;">
+                            <i class="fas fa-city"></i> Clean-Scene BBMP
+                        </h3>
+                        <p style="margin-bottom: 2rem; opacity: 0.9;" data-translate="smartWasteSystem">
+                            Smart Waste Management System for Bengaluru. AI-powered garbage collection 
+                            and route optimization for a cleaner city.
+                        </p>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <h4 style="margin-bottom: 1rem;"><i class="fas fa-check-circle"></i> <span data-translate="systemFeatures">System Features</span></h4>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-camera" style="color: #ffc107;"></i>
+                                    <span data-translate="aiImageRecognition">AI Image Recognition</span>
+                                </li>
+                                <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-map-marked-alt" style="color: #ffc107;"></i>
+                                    <span data-translate="realtimeHeatmaps">Real-time Heatmaps</span>
+                                </li>
+                                <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-route" style="color: #ffc107;"></i>
+                                    <span data-translate="routeOptimizationAI">Route Optimization</span>
+                                </li>
+                                <li style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-chart-line" style="color: #ffc107;"></i>
+                                    <span data-translate="predictiveAnalytics">Predictive Analytics</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                            <h5 style="margin-bottom: 1rem;" data-translate="demoCredentials">Demo Credentials</h5>
+                            <div style="font-size: 0.9rem; opacity: 0.9;">
+                                <p style="margin: 0.5rem 0;"><strong data-translate="user">User:</strong> citizen123 / password</p>
+                                <p style="margin: 0.5rem 0;"><strong data-translate="admin">Admin:</strong> admin123 / admin@123</p>
+                                <p style="margin: 0.5rem 0;"><strong data-translate="driver">Driver:</strong> DRV001 / password</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.login-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update forms
+            document.querySelectorAll('.login-form').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.getElementById(tabName + 'LoginForm').classList.add('active');
+        }
+
+        // Form submissions
+        document.getElementById('citizenLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const citizenId = this.querySelector('[name="citizenId"]').value;
+            const password = this.querySelector('[name="password"]').value;
+            
+            if (citizenId && password) {
+                // Store user role in sessionStorage
+                sessionStorage.setItem('userRole', 'citizen');
+                sessionStorage.setItem('userName', citizenId);
+                
+                // Redirect to unified dashboard
+                window.location.href = 'index.html';
+            }
+        });
+
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const adminId = this.querySelector('[name="adminId"]').value;
+            const password = this.querySelector('[name="password"]').value;
+            const department = this.querySelector('[name="department"]').value;
+            
+            if (adminId && password && department) {
+                // Store user role in sessionStorage
+                sessionStorage.setItem('userRole', 'admin');
+                sessionStorage.setItem('userName', adminId);
+                sessionStorage.setItem('department', department);
+                
+                // Redirect to unified dashboard
+                window.location.href = 'index.html';
+            }
+        });
+
+        document.getElementById('driverLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const driverId = this.querySelector('[name="driverId"]').value;
+            const password = this.querySelector('[name="password"]').value;
+            const vehicleNumber = this.querySelector('[name="vehicleNumber"]').value;
+            
+            if (driverId && password && vehicleNumber) {
+                // Store user role in sessionStorage
+                sessionStorage.setItem('userRole', 'driver');
+                sessionStorage.setItem('userName', driverId);
+                sessionStorage.setItem('vehicleNumber', vehicleNumber);
+                
+                // Redirect to driver dashboard
+                window.location.href = 'pages/driver-dashboard.html';
+            }
+        });
+
+        // Form validation
+        document.querySelectorAll('input[required], select[required]').forEach(field => {
+            field.addEventListener('blur', function() {
+                if (!this.value.trim()) {
+                    this.style.borderColor = '#dc3545';
+                } else {
+                    this.style.borderColor = '#ddd';
+                }
+            });
+
+            field.addEventListener('input', function() {
+                if (this.value.trim()) {
+                    this.style.borderColor = '#28a745';
+                }
+            });
+        });
+    </script>
+    
+    <!-- Language Switching Script -->
+    <script>
+        // Toggle language dropdown
+        document.getElementById('languageBtn')?.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = document.getElementById('languageDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('languageDropdown');
+            if (dropdown && !e.target.closest('.language-selector')) {
+                dropdown.style.display = 'none';
+            }
+        });
+        
+        // Switch language function
+        function switchLanguage(lang) {
+            languageManager.setLanguage(lang);
+            
+            // Update current language display
+            const langNames = {
+                en: 'EN',
+                kn: 'ಕನ್ನ',
+                hi: 'हिं'
+            };
+            document.getElementById('currentLangText').textContent = langNames[lang];
+            
+            // Close dropdown
+            document.getElementById('languageDropdown').style.display = 'none';
+        }
+        
+        // Initialize language on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const currentLang = languageManager.getCurrentLanguage();
+            const langNames = {
+                en: 'EN',
+                kn: 'ಕನ್ನ',
+                hi: 'हिं'
+            };
+            document.getElementById('currentLangText').textContent = langNames[currentLang];
+        });
+    </script>
+</body>
+</html>

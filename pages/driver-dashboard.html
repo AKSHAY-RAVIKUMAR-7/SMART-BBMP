@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard - Clean-Scene</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        .driver-header {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 100px 0 40px;
+        }
+
+        .driver-content {
+            padding: 40px 0;
+            background: #f8f9fa;
+            min-height: calc(100vh - 200px);
+        }
+
+        .welcome-section {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .driver-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .driver-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .driver-details h2 {
+            margin: 0 0 0.25rem 0;
+            color: var(--dark-color);
+        }
+
+        .driver-details p {
+            margin: 0;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+
+        .status-section {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .status-toggle {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .status-toggle.active {
+            background: #28a745;
+            color: white;
+        }
+
+        .status-toggle.inactive {
+            background: #dc3545;
+            color: white;
+        }
+
+        .logout-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background: #e67e00;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            text-align: center;
+            border-left: 4px solid #28a745;
+        }
+
+        .stat-card.warning { border-left-color: #ffc107; }
+        .stat-card.info { border-left-color: #17a2b8; }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #28a745;
+        }
+
+        .stat-card.warning .stat-icon { color: #ffc107; }
+        .stat-card.info .stat-icon { color: #17a2b8; }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .route-map-container {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .map-header {
+            background: #28a745;
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .map-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .map-controls button {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .map-controls button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        #driverMap {
+            height: 500px;
+            width: 100%;
+        }
+
+        .collection-points {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .points-header {
+            background: #20c997;
+            color: white;
+            padding: 1rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .point-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .point-item:hover {
+            background: #f8f9fa;
+        }
+
+        .point-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .point-number {
+            width: 30px;
+            height: 30px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .point-info {
+            flex: 1;
+            margin-left: 1rem;
+        }
+
+        .point-address {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.25rem;
+        }
+
+        .point-details {
+            color: var(--gray-color);
+            font-size: 0.85rem;
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .point-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .point-actions button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        .btn-navigate {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-navigate:hover {
+            background: #138496;
+        }
+
+        .btn-collected {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-collected:hover {
+            background: #218838;
+        }
+
+        .btn-skip {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-skip:hover {
+            background: #e0a800;
+        }
+
+        .status-collected {
+            background: #d4edda;
+            border-left-color: #28a745 !important;
+        }
+
+        .status-collected .point-number {
+            background: #28a745;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-collected {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-skipped {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .route-summary {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .summary-label {
+            font-size: 0.85rem;
+            color: var(--gray-color);
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <i class="fas fa-leaf" style="font-size: 2.5rem; color: var(--primary-color); margin-right: 12px;"></i>
+                    <div class="logo-text">
+                        <h2>Clean-Scene</h2>
+                        <p>Driver Portal</p>
+                    </div>
+                </div>
+                <div class="nav-menu">
+                    <a href="driver-dashboard.html" class="nav-link active">Dashboard</a>
+                    <a href="#route" class="nav-link">Today's Route</a>
+                    <a href="#history" class="nav-link">History</a>
+                    <a href="citizen-login.html" class="nav-link login-btn">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Driver Header -->
+    <section class="driver-header">
+        <div class="container">
+            <h1><i class="fas fa-truck"></i> Driver Dashboard</h1>
+            <p>Manage your collection routes and track your progress</p>
+        </div>
+    </section>
+
+    <!-- Driver Content -->
+    <section class="driver-content">
+        <div class="container">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <div class="driver-info">
+                    <div class="driver-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="driver-details">
+                        <h2>Welcome, <span id="driverName">Rajesh Kumar</span></h2>
+                        <p>Vehicle: <strong id="vehicleNumber">KA-01-AB-1234</strong> | Route: <strong id="routeNumber">Route #7</strong></p>
+                    </div>
+                </div>
+                <div class="status-section">
+                    <button class="status-toggle active" id="statusBtn" onclick="toggleDriverStatus()">
+                        <i class="fas fa-circle"></i>
+                        <span id="statusText">On Duty</span>
+                    </button>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-number" id="collectedCount">12</div>
+                    <div class="stat-label">Collected Today</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="stat-number" id="pendingCount">8</div>
+                    <div class="stat-label">Pending Stops</div>
+                </div>
+                <div class="stat-card info">
+                    <div class="stat-icon"><i class="fas fa-route"></i></div>
+                    <div class="stat-number" id="totalDistance">15.3 km</div>
+                    <div class="stat-label">Total Distance</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-number" id="estimatedTime">2h 30m</div>
+                    <div class="stat-label">Est. Completion</div>
+                </div>
+            </div>
+
+            <!-- Route Summary -->
+            <div class="route-summary">
+                <h3><i class="fas fa-info-circle"></i> Today's Route Summary</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-value">20</div>
+                        <div class="summary-label">Total Stops</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">60%</div>
+                        <div class="summary-label">Progress</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">08:30 AM</div>
+                        <div class="summary-label">Started At</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">02:30 PM</div>
+                        <div class="summary-label">Est. Finish</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Route Map -->
+                <div class="route-map-container">
+                    <div class="map-header">
+                        <h3><i class="fas fa-map"></i> Route Map</h3>
+                        <div class="map-controls">
+                            <button onclick="centerMap()">
+                                <i class="fas fa-crosshairs"></i> Center
+                            </button>
+                            <button onclick="refreshRoute()">
+                                <i class="fas fa-sync"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                    <div id="driverMap"></div>
+                </div>
+
+                <!-- Collection Points List -->
+                <div class="collection-points">
+                    <div class="points-header">
+                        <h3><i class="fas fa-list"></i> Collection Points</h3>
+                    </div>
+                    <div id="collectionPointsList">
+                        <!-- Sample Collection Points -->
+                        <div class="point-item" id="point-1">
+                            <div class="point-header">
+                                <div style="display: flex; align-items: flex-start;">
+                                    <div class="point-number">1</div>
+                                    <div class="point-info">
+                                        <div class="point-address">MG Road, Near Metro Station</div>
+                                        <div class="point-details">
+                                            <span><i class="fas fa-map-marker-alt"></i> 2.3 km</span>
+                                            <span><i class="fas fa-weight"></i> ~50 kg</span>
+                                        </div>
+                                        <span class="status-badge badge-pending">Pending</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="point-actions">
+                                <button class="btn-navigate" onclick="navigateToPoint(1)">
+                                    <i class="fas fa-directions"></i> Navigate
+                                </button>
+                                <button class="btn-collected" onclick="markCollected(1)">
+                                    <i class="fas fa-check"></i> Collected
+                                </button>
+                                <button class="btn-skip" onclick="skipPoint(1)">
+                                    <i class="fas fa-forward"></i> Skip
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="point-item status-collected" id="point-2">
+                            <div class="point-header">
+                                <div style="display: flex; align-items: flex-start;">
+                                    <div class="point-number">2</div>
+                                    <div class="point-info">
+                                        <div class="point-address">Brigade Road Junction</div>
+                                        <div class="point-details">
+                                            <span><i class="fas fa-map-marker-alt"></i> 3.1 km</span>
+                                            <span><i class="fas fa-weight"></i> ~35 kg</span>
+                                            <span><i class="fas fa-clock"></i> 10:15 AM</span>
+                                        </div>
+                                        <span class="status-badge badge-collected">Collected</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="point-item" id="point-3">
+                            <div class="point-header">
+                                <div style="display: flex; align-items: flex-start;">
+                                    <div class="point-number">3</div>
+                                    <div class="point-info">
+                                        <div class="point-address">Indiranagar 100 Feet Road</div>
+                                        <div class="point-details">
+                                            <span><i class="fas fa-map-marker-alt"></i> 4.5 km</span>
+                                            <span><i class="fas fa-weight"></i> ~80 kg</span>
+                                        </div>
+                                        <span class="status-badge badge-pending">Pending</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="point-actions">
+                                <button class="btn-navigate" onclick="navigateToPoint(3)">
+                                    <i class="fas fa-directions"></i> Navigate
+                                </button>
+                                <button class="btn-collected" onclick="markCollected(3)">
+                                    <i class="fas fa-check"></i> Collected
+                                </button>
+                                <button class="btn-skip" onclick="skipPoint(3)">
+                                    <i class="fas fa-forward"></i> Skip
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize map
+        let driverMap;
+        let currentLocation = [12.9716, 77.5946]; // Bangalore coordinates
+
+        function initMap() {
+            driverMap = L.map('driverMap').setView(currentLocation, 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(driverMap);
+
+            // Add current location marker
+            L.marker(currentLocation).addTo(driverMap)
+                .bindPopup('Your Location')
+                .openPopup();
+
+            // Add collection points
+            const points = [
+                [12.9750, 77.5945],
+                [12.9750, 77.6070],
+                [12.9784, 77.6408]
+            ];
+
+            points.forEach((point, index) => {
+                L.marker(point).addTo(driverMap)
+                    .bindPopup(`Collection Point ${index + 1}`);
+            });
+        }
+
+        function toggleDriverStatus() {
+            const btn = document.getElementById('statusBtn');
+            const text = document.getElementById('statusText');
+            
+            if (btn.classList.contains('active')) {
+                btn.classList.remove('active');
+                btn.classList.add('inactive');
+                text.textContent = 'Off Duty';
+            } else {
+                btn.classList.add('active');
+                btn.classList.remove('inactive');
+                text.textContent = 'On Duty';
+            }
+        }
+
+        function markCollected(pointId) {
+            const point = document.getElementById(`point-${pointId}`);
+            if (point) {
+                point.classList.add('status-collected');
+                const badge = point.querySelector('.status-badge');
+                badge.className = 'status-badge badge-collected';
+                badge.textContent = 'Collected';
+                
+                const actions = point.querySelector('.point-actions');
+                if (actions) {
+                    actions.style.display = 'none';
+                }
+
+                // Update stats
+                const collected = document.getElementById('collectedCount');
+                const pending = document.getElementById('pendingCount');
+                collected.textContent = parseInt(collected.textContent) + 1;
+                pending.textContent = parseInt(pending.textContent) - 1;
+
+                alert(`Point ${pointId} marked as collected!`);
+            }
+        }
+
+        function skipPoint(pointId) {
+            if (confirm(`Are you sure you want to skip Point ${pointId}?`)) {
+                const point = document.getElementById(`point-${pointId}`);
+                const badge = point.querySelector('.status-badge');
+                badge.className = 'status-badge badge-skipped';
+                badge.textContent = 'Skipped';
+                
+                const actions = point.querySelector('.point-actions');
+                if (actions) {
+                    actions.style.display = 'none';
+                }
+            }
+        }
+
+        function navigateToPoint(pointId) {
+            alert(`Opening navigation to Point ${pointId}...`);
+            // In a real app, this would open Google Maps or similar
+        }
+
+        function centerMap() {
+            if (driverMap) {
+                driverMap.setView(currentLocation, 13);
+            }
+        }
+
+        function refreshRoute() {
+            alert('Refreshing route...');
+            location.reload();
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'citizen-login.html';
+            }
+        }
+
+        // Initialize map on page load
+        window.addEventListener('load', initMap);
+    </script>
+</body>
+</html>

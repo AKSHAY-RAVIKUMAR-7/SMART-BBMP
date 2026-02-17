@@ -8,6 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="../js/translations.js"></script>
     <script src="../js/ai-image-recognition.js"></script>
     <script src="../js/chatbot.js"></script>
     <style>
@@ -175,22 +176,40 @@
                     </div>
                 </div>
                 <div class="nav-menu">
-                    <a href="../index.html" class="nav-link">Home</a>
+                    <a href="../index.html" class="nav-link" data-translate="home">Home</a>
                     <div class="nav-dropdown">
-                        <a href="#" class="nav-link">Services <i class="fas fa-chevron-down"></i></a>
+                        <a href="#" class="nav-link"><span data-translate="services">Services</span> <i class="fas fa-chevron-down"></i></a>
                         <div class="dropdown-content">
-                            <a href="property-tax.html"><i class="fas fa-home"></i> Property Tax</a>
-                            <a href="trade-license.html"><i class="fas fa-certificate"></i> Trade License</a>
-                            <a href="birth-certificate.html"><i class="fas fa-baby"></i> Birth Certificate</a>
-                            <a href="building-permit.html"><i class="fas fa-building"></i> Building Permit</a>
-                            <a href="report-garbage.html"><i class="fas fa-trash"></i> Report Garbage</a>
-                            <a href="track-collection.html"><i class="fas fa-map-marker-alt"></i> Track Collection</a>
+                            <a href="property-tax.html"><i class="fas fa-home"></i> <span data-translate="propertyTax">Property Tax</span></a>
+                            <a href="trade-license.html"><i class="fas fa-certificate"></i> <span data-translate="tradeLicense">Trade License</span></a>
+                            <a href="birth-certificate.html"><i class="fas fa-baby"></i> <span data-translate="birthCertificate">Birth Certificate</span></a>
+                            <a href="building-permit.html"><i class="fas fa-building"></i> <span data-translate="buildingPermit">Building Permit</span></a>
+                            <a href="report-garbage.html"><i class="fas fa-trash"></i> <span data-translate="reportGarbage">Report Garbage</span></a>
+                            <a href="track-collection.html"><i class="fas fa-map-marker-alt"></i> <span data-translate="trackCollection">Track Collection</span></a>
+                        </div>
+                    </div>
+                    <!-- Language Selector -->
+                    <div class="language-selector" style="display: inline-block; position: relative; margin: 0 1rem;">
+                        <button id="languageBtn" type="button" style="background: white; border: 1px solid #ddd; padding: 0.5rem 0.75rem; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLangText">EN</span>
+                        </button>
+                        <div id="languageDropdown" style="display: none; position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: white; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); min-width: 120px; z-index: 1000;">
+                            <button type="button" onclick="switchLanguage('en')" style="width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='none'">
+                                English
+                            </button>
+                            <button type="button" onclick="switchLanguage('kn')" style="width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='none'">
+                                ಕನ್ನಡ
+                            </button>
+                            <button type="button" onclick="switchLanguage('hi')" style="width: 100%; padding: 0.75rem 1rem; border: none; background: none; text-align: left; cursor: pointer;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='none'">
+                                हिंदी
+                            </button>
                         </div>
                     </div>
                     <a href="../index.html#portals" class="nav-link">Portals</a>
                     <a href="citizen-dashboard.html" class="nav-link">My Dashboard</a>
                     <a href="../index.html#contact" class="nav-link">Contact</a>
-                    <a href="citizen-login.html" class="nav-link login-btn">Login</a>
+                    <a href="citizen-login.html" class="nav-link login-btn" data-translate="login">Login</a>
                 </div>
             </div>
         </nav>
@@ -201,18 +220,18 @@
         <div class="container">
             <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
                 <i class="fas fa-camera" style="font-size: 3rem;"></i>
-                <h1>Report Garbage</h1>
+                <h1 data-translate="reportGarbageTitle">Smart Garbage Reporting</h1>
             </div>
-            <p>Help keep Bengaluru clean by reporting garbage in your area</p>
+            <p data-translate="heroSubtitle">AI-Powered waste detection with automatic location, waste classification, and priority assignment</p>
             <div style="margin-top: 2rem;">
                 <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; margin: 0 0.5rem;">
-                    <i class="fas fa-camera"></i> Photo Upload
+                    <i class="fas fa-brain"></i> Auto Waste Classification
                 </span>
                 <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; margin: 0 0.5rem;">
-                    <i class="fas fa-map-marker-alt"></i> GPS Location
+                    <i class="fas fa-map-marker-alt"></i> Auto Location & GPS
                 </span>
                 <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px; margin: 0 0.5rem;">
-                    <i class="fas fa-bolt"></i> Instant Tracking
+                    <i class="fas fa-road"></i> Road-Based Priority
                 </span>
             </div>
         </div>
@@ -225,17 +244,29 @@
                 <!-- Main Form -->
                 <div>
                     <div class="report-form">
-                        <h2 style="color: var(--primary-color); margin-bottom: 1.5rem;">
-                            <i class="fas fa-exclamation-triangle"></i> New Garbage Report
+                        <h2 style="color: var(--primary-color); margin-bottom: 1rem;">
+                            <i class="fas fa-exclamation-triangle"></i> <span data-translate="reportGarbageTitle">Smart Garbage Report</span>
                         </h2>
+                        
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-robot" style="font-size: 1.5rem;"></i>
+                                <strong>AI-Powered Automation</strong>
+                            </div>
+                            <ul style="margin: 0.5rem 0 0 1.5rem; font-size: 0.9rem; opacity: 0.95;">
+                                <li>📍 Location automatically detected via GPS</li>
+                                <li>♻️ Waste type classified as Dry/Wet/Hazardous</li>
+                                <li>🛣️ Priority auto-assigned based on road size</li>
+                            </ul>
+                        </div>
                         
                         <form id="garbageReportForm">
                             <!-- Photo Upload Section -->
                             <div class="form-section">
                                 <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
-                                    <i class="fas fa-camera"></i> Upload Photos
+                                    <i class="fas fa-camera"></i> <span data-translate="uploadPhotos">Upload Photos</span>
                                     <span style="font-size: 0.75rem; font-weight: normal; color: #667eea; margin-left: 0.5rem;">
-                                        <i class="fas fa-brain"></i> AI-Powered Detection
+                                        <i class="fas fa-brain"></i> <span data-translate="aiDetected">AI-Powered Detection</span>
                                     </span>
                                 </h3>
                                 <div class="camera-section" id="cameraSection">
@@ -275,11 +306,53 @@
                                 </button>
                             </div>
 
+                            <!-- Waste Type Classification -->
+                            <div class="form-section">
+                                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
+                                    <i class="fas fa-recycle"></i> Waste Classification
+                                    <span style="font-size: 0.75rem; font-weight: normal; color: #667eea; margin-left: 0.5rem;">
+                                        <i class="fas fa-brain"></i> AI-Suggested
+                                    </span>
+                                </h3>
+                                <div id="wasteTypeDisplay" style="padding: 1rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea; margin-bottom: 1rem;">
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; color: #667eea;"></i>
+                                        <span style="color: #666;">Upload image to auto-detect waste type...</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-hand-pointer"></i> Select Waste Type (Override AI if needed)</label>
+                                    <select id="wasteTypeSelect" name="wasteType" class="form-control" style="padding: 0.75rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                                        <option value="">-- AI will detect automatically --</option>
+                                        <option value="Wet Waste">♻️ Wet Waste (Food, Garden waste)</option>
+                                        <option value="Dry Waste">📦 Dry Waste (Plastic, Paper, Metal)</option>
+                                        <option value="Hazardous Waste">⚠️ Hazardous Waste (E-waste, Medical)</option>
+                                        <option value="Mixed Waste">🗑️ Mixed Waste</option>
+                                        <option value="Construction Debris">🏗️ Construction Debris</option>
+                                    </select>
+                                    <small style="color: #666; font-size: 0.85rem; margin-top: 0.25rem; display: block;">
+                                        Leave as "AI will detect" to use automatic classification
+                                    </small>
+                                </div>
+                            </div>
+
                             <!-- Priority Level -->
                             <div class="form-section">
                                 <h3 style="color: var(--primary-color); margin-bottom: 1rem;">
                                     <i class="fas fa-exclamation-circle"></i> Priority Level
+                                    <span style="font-size: 0.75rem; font-weight: normal; color: #667eea; margin-left: 0.5rem;">
+                                        <i class="fas fa-map"></i> AI-Suggested
+                                    </span>
                                 </h3>
+                                <div id="priorityDisplay" style="padding: 1rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ffc107; margin-bottom: 1rem;">
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; color: #ffc107;"></i>
+                                        <span style="color: #666;">Analyzing road size from location...</span>
+                                    </div>
+                                </div>
+                                <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">
+                                    <i class="fas fa-info-circle"></i> Click to override AI-suggested priority
+                                </p>
                                 <div class="priority-selector">
                                     <div class="priority-option priority-low" data-priority="low">
                                         <i class="fas fa-leaf" style="color: #28a745; font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
@@ -454,6 +527,11 @@
         let uploadedPhotos = [];
         let selectedPriority = null;
         let aiRecognizer = null;
+        let detectedWasteType = null;
+        let roadSizeData = null;
+        let autoPriority = null;
+        let manualWasteType = null;
+        let manualPriority = null;
 
         // Initialize map and get location on page load
         document.addEventListener('DOMContentLoaded', function() {
@@ -466,6 +544,9 @@
             // Initialize AI Image Recognizer
             aiRecognizer = new GarbageImageRecognizer();
             aiRecognizer.initialize();
+            
+            // Setup manual input listeners
+            setupManualInputListeners();
         });
 
         // Initialize Leaflet map
@@ -509,6 +590,9 @@
                             </div>
                         `;
                         
+                        // Analyze road size for priority determination
+                        analyzeRoadSize(lat, lng);
+                        
                         // Reverse geocoding (simplified)
                         fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=YOUR_API_KEY`)
                             .then(response => response.json())
@@ -548,6 +632,128 @@
                     </div>
                 `;
             }
+        }
+
+        // Analyze road size from location to determine priority
+        function analyzeRoadSize(lat, lng) {
+            const priorityDisplay = document.getElementById('priorityDisplay');
+            
+            // Simulate road size analysis using OpenStreetMap data
+            // In production, this would use actual map APIs like Google Maps Roads API or Overpass API
+            setTimeout(() => {
+                // Simulate road type detection
+                const roadTypes = [
+                    { type: 'Main Road / Highway', width: 'Wide (>20m)', priority: 'high', icon: 'road', color: '#dc3545' },
+                    { type: 'Arterial Road', width: 'Medium (10-20m)', priority: 'high', icon: 'road', color: '#ffc107' },
+                    { type: 'Collector Road', width: 'Medium (8-12m)', priority: 'medium', icon: 'route', color: '#ffc107' },
+                    { type: 'Local Street', width: 'Narrow (4-8m)', priority: 'low', icon: 'map-signs', color: '#28a745' },
+                    { type: 'Residential Lane', width: 'Very Narrow (<4m)', priority: 'low', icon: 'home', color: '#28a745' }
+                ];
+                
+                // Simulate detection (in production, use actual API)
+                const detectedRoad = roadTypes[Math.floor(Math.random() * roadTypes.length)];
+                roadSizeData = detectedRoad;
+                autoPriority = detectedRoad.priority;
+                selectedPriority = autoPriority; // Auto-select priority
+                
+                // Update UI
+                priorityDisplay.innerHTML = `
+                    <div style=\"display: flex; align-items: start; gap: 1rem;\">
+                        <div style=\"flex: 1;\">
+                            <div style=\"display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;\">
+                                <i class=\"fas fa-${detectedRoad.icon}\" style=\"color: ${detectedRoad.color}; font-size: 1.5rem;\"></i>
+                                <div>
+                                    <strong style=\"color: var(--dark-color);\">${detectedRoad.type}</strong>
+                                    <div style=\"font-size: 0.85rem; color: var(--gray-color);\">Road Width: ${detectedRoad.width}</div>
+                                </div>
+                            </div>
+                            <div style=\"margin-top: 0.75rem; padding: 0.75rem; background: rgba(${detectedRoad.priority === 'high' ? '220, 53, 69' : detectedRoad.priority === 'medium' ? '255, 193, 7' : '40, 167, 69'}, 0.1); border-radius: 6px;\">
+                                <strong style=\"color: ${detectedRoad.color};\">
+                                    <i class=\"fas fa-exclamation-circle\"></i> Auto-Priority: ${detectedRoad.priority.toUpperCase()}
+                                </strong>
+                                <div style=\"font-size: 0.85rem; margin-top: 0.25rem; color: #666;\">
+                                    ${detectedRoad.priority === 'high' ? 'Main roads require urgent attention due to high traffic visibility' : 
+                                      detectedRoad.priority === 'medium' ? 'Moderate priority for collector roads with regular traffic' :
+                                      'Lower priority for residential areas with less traffic'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Auto-select the priority option
+                document.querySelectorAll('.priority-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                    if (opt.dataset.priority === autoPriority) {
+                        opt.classList.add('selected');
+                    }
+                });
+                
+            }, 1500);
+        }
+
+        // Classify waste type from AI image analysis
+        function classifyWasteType(analysis) {
+            const wasteTypeDisplay = document.getElementById('wasteTypeDisplay');
+            
+            // Enhanced waste classification logic
+            const wasteClassification = {
+                'Plastic Bottles': { type: 'Dry Waste', category: 'Recyclable', icon: 'recycle', color: '#17a2b8' },
+                'Food Waste': { type: 'Wet Waste', category: 'Biodegradable', icon: 'leaf', color: '#28a745' },
+                'Mixed Waste': { type: 'Mixed Waste', category: 'Requires Sorting', icon: 'trash', color: '#ffc107' },
+                'Paper/Cardboard': { type: 'Dry Waste', category: 'Recyclable', icon: 'file-alt', color: '#17a2b8' },
+                'Metal/Cans': { type: 'Dry Waste', category: 'Recyclable', icon: 'recycle', color: '#17a2b8' },
+                'Garden Waste': { type: 'Wet Waste', category: 'Biodegradable', icon: 'seedling', color: '#28a745' },
+                'E-Waste': { type: 'Hazardous Waste', category: 'Special Handling', icon: 'bolt', color: '#dc3545' },
+                'Construction Debris': { type: 'Dry Waste', category: 'Bulk Waste', icon: 'hard-hat', color: '#6c757d' }
+            };
+            
+            const garbageType = analysis.garbageType.type;
+            const classification = wasteClassification[garbageType] || { 
+                type: 'Mixed Waste', 
+                category: 'Requires Assessment', 
+                icon: 'question-circle', 
+                color: '#ffc107' 
+            };
+            
+            detectedWasteType = classification;
+            
+            // Auto-select in dropdown (but user can still override)
+            const wasteTypeSelect = document.getElementById('wasteTypeSelect');
+            const wasteTypeValue = classification.type;
+            
+            // Try to match and select
+            for (let option of wasteTypeSelect.options) {
+                if (option.value === wasteTypeValue) {
+                    wasteTypeSelect.value = wasteTypeValue;
+                    wasteTypeSelect.style.borderColor = '#667eea';
+                    wasteTypeSelect.style.background = 'rgba(102, 126, 234, 0.05)';
+                    break;
+                }
+            }
+            
+            wasteTypeDisplay.innerHTML = `
+                <div style=\"display: flex; align-items: center; gap: 1rem;\">
+                    <div style=\"background: ${classification.color}; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;\">
+                        <i class=\"fas fa-${classification.icon}\"></i>
+                    </div>
+                    <div style=\"flex: 1;\">
+                        <div style=\"font-size: 1.1rem; font-weight: 600; color: var(--dark-color); margin-bottom: 0.25rem;\">
+                            ${classification.type}
+                        </div>
+                        <div style=\"font-size: 0.9rem; color: var(--gray-color);\">
+                            Category: ${classification.category}
+                        </div>
+                        <div style=\"margin-top: 0.5rem; padding: 0.5rem; background: rgba(${classification.color === '#28a745' ? '40, 167, 69' : classification.color === '#17a2b8' ? '23, 162, 184' : '255, 193, 7'}, 0.1); border-radius: 4px; font-size: 0.85rem;\">
+                            <i class=\"fas fa-info-circle\"></i> 
+                            ${classification.type === 'Wet Waste' ? 'Will be processed for composting' : 
+                              classification.type === 'Dry Waste' ? 'Will be sent for recycling' : 
+                              classification.type === 'Hazardous Waste' ? 'Requires special disposal procedures' :
+                              'Will be sorted at collection center'}
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         // Photo upload functions
@@ -597,6 +803,8 @@
                                 const analysis = await aiRecognizer.analyzeImage(file);
                                 updatePhotoWithAI(photoId, analysis);
                                 displayAIResults(analysis);
+                                // Auto-classify waste type
+                                classifyWasteType(analysis);
                             } catch (error) {
                                 console.error('AI analysis failed:', error);
                                 const badge = document.querySelector(`#${photoId} .ai-analysis-badge`);
@@ -699,7 +907,36 @@
                     document.querySelectorAll('.priority-option').forEach(opt => opt.classList.remove('selected'));
                     this.classList.add('selected');
                     selectedPriority = this.dataset.priority;
+                    manualPriority = this.dataset.priority; // Track manual selection
+                    
+                    // Visual feedback for manual override
+                    if (autoPriority && manualPriority !== autoPriority) {
+                        this.style.boxShadow = '0 0 0 3px rgba(255, 193, 7, 0.3)';
+                    }
                 });
+            });
+        }
+        
+        // Setup manual input listeners
+        function setupManualInputListeners() {
+            // Waste type manual selection
+            const wasteTypeSelect = document.getElementById('wasteTypeSelect');
+            wasteTypeSelect.addEventListener('change', function() {
+                if (this.value) {
+                    manualWasteType = this.value;
+                    this.style.borderColor = '#28a745';
+                    this.style.background = 'rgba(40, 167, 69, 0.05)';
+                    
+                    // Show override indicator
+                    if (detectedWasteType && this.value !== detectedWasteType.type) {
+                        this.style.boxShadow = '0 0 0 3px rgba(255, 193, 7, 0.3)';
+                    }
+                } else {
+                    manualWasteType = null;
+                    this.style.borderColor = '#ddd';
+                    this.style.background = 'white';
+                    this.style.boxShadow = 'none';
+                }
             });
         }
 
@@ -730,10 +967,7 @@
                 return;
             }
             
-            if (!selectedPriority) {
-                alert('Please select a priority level.');
-                return;
-            }
+            // Priority is auto-detected, so no need to validate manual selection
             
             const formData = new FormData(this);
             
@@ -745,7 +979,34 @@
             // Add location data
             formData.append('latitude', currentLocation.lat);
             formData.append('longitude', currentLocation.lng);
-            formData.append('priority', selectedPriority);
+            
+            // Use manual priority if provided, otherwise use AI-suggested priority
+            const finalPriority = manualPriority || selectedPriority || autoPriority;
+            formData.append('priority', finalPriority);
+            
+            // Use manual waste type if provided, otherwise use AI-detected waste type
+            if (manualWasteType) {
+                formData.append('wasteType', manualWasteType);
+                formData.append('wasteCategory', manualWasteType); // Use manual as category
+                formData.append('inputMethod', 'manual');
+            } else if (detectedWasteType) {
+                formData.append('wasteType', detectedWasteType.type);
+                formData.append('wasteCategory', detectedWasteType.category);
+                formData.append('inputMethod', 'ai');
+            }
+            
+            // Add road size data
+            if (roadSizeData) {
+                formData.append('roadType', roadSizeData.type);
+                formData.append('roadWidth', roadSizeData.width);
+                formData.append('aiSuggestedPriority', autoPriority);
+            }
+            
+            // Track if manual override was used
+            if ((manualWasteType && detectedWasteType && manualWasteType !== detectedWasteType.type) ||
+                (manualPriority && autoPriority && manualPriority !== autoPriority)) {
+                formData.append('manualOverride', 'true');
+            }
             
             // Simulate form submission
             const submitButton = this.querySelector('button[type="submit"]');
@@ -755,13 +1016,67 @@
             
             setTimeout(() => {
                 const reportId = 'GR' + Date.now().toString().substr(-6);
-                alert(`Garbage report submitted successfully!\n\nReport ID: ${reportId}\n\nYou will receive SMS updates about the collection status.`);
+                
+                // Determine final values
+                const finalWasteType = manualWasteType || (detectedWasteType ? detectedWasteType.type : 'Not specified');
+                const finalPriority = manualPriority || selectedPriority || autoPriority || 'medium';
+                const inputMethod = manualWasteType ? 'Manual Input' : 'AI-Detected';
+                const priorityMethod = manualPriority ? 'Manual Selection' : 'AI-Suggested';
+                
+                // Enhanced success message with submission details
+                let successMessage = `✓ Garbage Report Submitted Successfully!\n\nReport ID: ${reportId}\n`;
+                successMessage += `\n━━━━━━━━━━━━━━━━━━━━━━`;
+                successMessage += `\nWaste Type: ${finalWasteType} (${inputMethod})`;
+                successMessage += `\nPriority: ${finalPriority.toUpperCase()} (${priorityMethod})`;
+                
+                if (roadSizeData) {
+                    successMessage += `\nRoad Type: ${roadSizeData.type}`;
+                }
+                
+                // Show override indicator
+                if ((manualWasteType && detectedWasteType && manualWasteType !== detectedWasteType.type) ||
+                    (manualPriority && autoPriority && manualPriority !== autoPriority)) {
+                    successMessage += `\n\n⚠️ Manual override applied`;
+                }
+                
+                successMessage += `\n━━━━━━━━━━━━━━━━━━━━━━`;
+                successMessage += `\n\n📱 You will receive SMS updates about the collection status.`;
+                
+                alert(successMessage);
                 
                 // Reset form
                 this.reset();
                 document.getElementById('photoPreview').innerHTML = '';
+                document.getElementById('aiAnalysisResults').innerHTML = '';
                 uploadedPhotos = [];
                 selectedPriority = null;
+                detectedWasteType = null;
+                roadSizeData = null;
+                autoPriority = null;
+                manualWasteType = null;
+                manualPriority = null;
+                
+                // Reset waste type selector
+                const wasteTypeSelect = document.getElementById('wasteTypeSelect');
+                wasteTypeSelect.value = '';
+                wasteTypeSelect.style.borderColor = '#ddd';
+                wasteTypeSelect.style.background = 'white';
+                wasteTypeSelect.style.boxShadow = 'none';
+                
+                // Reset priority options
+                document.querySelectorAll('.priority-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                    opt.style.boxShadow = '';
+                });
+                
+                // Reset displays
+                document.getElementById('wasteTypeDisplay').innerHTML = `
+                    <div style=\"display: flex; align-items: center; gap: 1rem;\">
+                        <i class=\"fas fa-spinner fa-spin\" style=\"font-size: 1.5rem; color: #667eea;\"></i>
+                        <span style=\"color: #666;\">Upload image to auto-detect waste type...</span>
+                    </div>
+                `;
+                
                 document.querySelectorAll('.priority-option').forEach(opt => opt.classList.remove('selected'));
                 
                 submitButton.innerHTML = originalText;
@@ -781,6 +1096,51 @@
                     this.style.borderColor = '#28a745';
                 }
             });
+        });
+    </script>
+    
+    <!-- Language Switching Script -->
+    <script>
+        // Toggle language dropdown
+        document.getElementById('languageBtn')?.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = document.getElementById('languageDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('languageDropdown');
+            if (dropdown && !e.target.closest('.language-selector')) {
+                dropdown.style.display = 'none';
+            }
+        });
+        
+        // Switch language function
+        function switchLanguage(lang) {
+            languageManager.setLanguage(lang);
+            
+            // Update current language display
+            const langNames = {
+                en: 'EN',
+                kn: 'ಕನ್ನ',
+                hi: 'हिं'
+            };
+            document.getElementById('currentLangText').textContent = langNames[lang];
+            
+            // Close dropdown
+            document.getElementById('languageDropdown').style.display = 'none';
+        }
+        
+        // Initialize language on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const currentLang = languageManager.getCurrentLanguage();
+            const langNames = {
+                en: 'EN',
+                kn: 'ಕನ್ನ',
+                hi: 'हिं'
+            };
+            document.getElementById('currentLangText').textContent = langNames[currentLang];
         });
     </script>
 </body>

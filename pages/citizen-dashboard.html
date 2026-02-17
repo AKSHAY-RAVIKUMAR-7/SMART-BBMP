@@ -240,19 +240,15 @@
                 <div class="nav-menu">
                     <a href="citizen-dashboard.html" class="nav-link active">Dashboard</a>
                     <div class="nav-dropdown">
-                        <a href="#" class="nav-link">Services <i class="fas fa-chevron-down"></i></a>
+                        <a href="#" class="nav-link">My Services <i class="fas fa-chevron-down"></i></a>
                         <div class="dropdown-content">
-                            <a href="property-tax.html"><i class="fas fa-home"></i> Property Tax</a>
-                            <a href="trade-license.html"><i class="fas fa-certificate"></i> Trade License</a>
-                            <a href="birth-certificate.html"><i class="fas fa-baby"></i> Birth Certificate</a>
-                            <a href="building-permit.html"><i class="fas fa-building"></i> Building Permit</a>
                             <a href="report-garbage.html"><i class="fas fa-trash"></i> Report Garbage</a>
                             <a href="track-collection.html"><i class="fas fa-map-marker-alt"></i> Track Collection</a>
                         </div>
                     </div>
-                    <a href="../index.html#portals" class="nav-link">Portals</a>
                     <a href="../index.html#contact" class="nav-link">Contact</a>
                     <a href="../index.html" class="nav-link">Home</a>
+                    <a href="citizen-login.html" class="nav-link login-btn">Logout</a>
                 </div>
             </div>
         </div>
@@ -272,8 +268,9 @@
             <!-- Welcome Section -->
             <div class="welcome-section">
                 <div class="welcome-text">
-                    <h2>Welcome back, Citizen!</h2>
-                    <p>Manage your garbage reports and track collection status</p>
+                    <h2>Welcome back, <span id="userName">Citizen</span>!</h2>
+                    <p>Report garbage and track collection status in your area</p>
+                    <small style="color: #6c757d; font-size: 0.85rem;"><i class="fas fa-info-circle"></i> User access - View and report only</small>
                 </div>
                 <button class="logout-btn" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i> Logout
