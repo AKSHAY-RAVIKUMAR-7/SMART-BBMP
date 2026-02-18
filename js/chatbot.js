@@ -70,28 +70,64 @@ class CleanSceneChatbot {
         // Attach event listeners
         this.attachEventListeners();
         
-        // Send welcome message
+        // Send welcome message (but don't open window)
         setTimeout(() => this.sendWelcomeMessage(), 500);
+        
+        // Ensure window is closed initially
+        setTimeout(() => {
+            const window = document.getElementById('chatbot-window');
+            if (window) {
+                window.classList.remove('active');
+                window.style.display = 'none';
+            }
+            this.isOpen = false;
+        }, 100);
     }
 
     // Add chatbot CSS styles
     addChatbotStyles() {
         const style = document.createElement('style');
+        style.id = 'chatbot-styles';
         style.textContent = `
-            .chatbot-container { position: fixed; bottom: 20px; right: 20px; z-index: 999; }
-            .chatbot-button {
-                width: 60px; height: 60px; border-radius: 50%;
-                background: linear-gradient(135deg, #2C5AA0, #1E88E5);
-                color: white; display: flex; align-items: center; justify-content: center;
-                font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 20px rgba(44, 90, 160, 0.4);
-                transition: all 0.3s ease; position: relative;
+            #chatbot-container,
+            .chatbot-container { 
+                position: fixed !important; 
+                bottom: 20px !important; 
+                right: 20px !important; 
+                left: auto !important;
+                top: auto !important;
+                z-index: 9999 !important;
+                pointer-events: auto !important;
+                display: block !important;
             }
+            #chatbot-button,
+            .chatbot-button {
+                width: 60px !important; 
+                height: 60px !important; 
+                border-radius: 50% !important;
+                background: linear-gradient(135deg, #2C5AA0, #1E88E5) !important;
+                color: white !important; 
+                display: flex !important; 
+                align-items: center !important; 
+                justify-content: center !important;
+                font-size: 1.5rem !important; 
+                cursor: pointer !important; 
+                box-shadow: 0 4px 20px rgba(44, 90, 160, 0.4) !important;
+                transition: all 0.3s ease !important; 
+                position: relative !important;
+            }
+            #chatbot-button:hover,
             .chatbot-button:hover {
-                transform: scale(1.1); box-shadow: 0 6px 25px rgba(44, 90, 160, 0.6);
+                transform: scale(1.1) !important; 
+                box-shadow: 0 6px 25px rgba(44, 90, 160, 0.6) !important;
             }
             .chatbot-badge {
-                position: absolute; top: -5px; right: -5px;
-                background: #dc3545; color: white; border-radius: 50%;
+                position: absolute !important; 
+                top: -5px !important; 
+                right: -5px !important;
+                background: #dc3545 !important; 
+                color: white !important; 
+                border-radius: 50% !important;
                 width: 22px; height: 22px; display: flex; align-items: center;
                 justify-content: center; font-size: 0.75rem; font-weight: bold;
                 animation: pulse 2s infinite;
@@ -115,29 +151,37 @@ class CleanSceneChatbot {
             
             /* Mobile responsive */
             @media (max-width: 768px) {
+                #chatbot-container,
                 .chatbot-container {
                     bottom: 20px !important;
                     right: 20px !important;
+                    left: auto !important;
                     z-index: 9999 !important;
                 }
+                #chatbot-button,
                 .chatbot-button {
                     width: 55px !important;
                     height: 55px !important;
                     font-size: 1.3rem !important;
                 }
+                #chatbot-window,
                 .chatbot-window {
-                    width: calc(100vw - 20px) !important;
-                    height: calc(100vh - 100px) !important;
-                    max-width: 380px !important;
-                    right: -10px !important;
+                    width: calc(100vw - 40px) !important;
+                    height: calc(100vh - 120px) !important;
+                    max-width: 360px !important;
+                    max-height: 550px !important;
+                    right: 0 !important;
+                    bottom: 70px !important;
+                    left: auto !important;
                 }
             }
             
             @media (max-width: 480px) {
+                #chatbot-window,
                 .chatbot-window {
-                    width: calc(100vw - 10px) !important;
-                    right: -160px !important;
-                    bottom: 75px !important;
+                    width: calc(100vw - 30px) !important;
+                    right: -15px !important;
+                    bottom: 70px !important;
                 }
             }
             
@@ -301,9 +345,16 @@ class CleanSceneChatbot {
         
         if (this.isOpen) {
             window.classList.add('active');
+            window.style.display = 'flex';
             if (badge) badge.style.display = 'none';
+            // Focus on input
+            setTimeout(() => {
+                const input = document.getElementById('chatbot-input');
+                if (input) input.focus();
+            }, 100);
         } else {
             window.classList.remove('active');
+            window.style.display = 'none';
         }
     }
 
@@ -539,6 +590,23 @@ What would you like to know more about?`;
 
 // Initialize chatbot when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    const chatbot = new CleanSceneChatbot();
-    window.cleanSceneChatbot = chatbot;
+    console.log('Initializing Clean-Scene Chatbot...');
+    try {
+        const chatbot = new CleanSceneChatbot();
+        window.cleanSceneChatbot = chatbot;
+        console.log('Chatbot initialized successfully!');
+        
+        // Ensure chatbot is visible after short delay
+        setTimeout(function() {
+            const container = document.getElementById('chatbot-container');
+            if (container) {
+                console.log('Chatbot container found, ensuring visibility...');
+                container.style.cssText = 'position: fixed !important; bottom: 20px !important; right: 20px !important; z-index: 9999 !important; display: block !important;';
+            } else {
+                console.warn('Chatbot container not found!');
+            }
+        }, 500);
+    } catch (error) {
+        console.error('Error initializing chatbot:', error);
+    }
 });

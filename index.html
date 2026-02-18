@@ -8,7 +8,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="js/translations.js"></script>
-    <script src="js/chatbot.js"></script>
     <style>
         .admin-only { display: none; }
         .citizen-only { display: none; }
@@ -28,6 +27,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
         
         .driver-contact-section {
@@ -68,10 +69,129 @@
             border-radius: 6px;
             cursor: pointer;
             margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
         }
         
         .contact-driver-btn:hover {
             background: #218838;
+        }
+        
+        /* Nav menu user info wrapper */
+        .nav-user-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                padding: 80px 0 30px;
+            }
+            
+            .user-info-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1.5rem;
+            }
+            
+            .user-info-bar > div {
+                width: 100%;
+            }
+            
+            .user-info-bar button {
+                width: 100%;
+                margin-top: 1rem;
+            }
+            
+            .driver-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .driver-contact-section {
+                padding: 1.5rem;
+            }
+            
+            .driver-card {
+                padding: 1rem;
+            }
+            
+            .contact-driver-btn {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.85rem;
+                margin-right: 0.3rem;
+            }
+            
+            /* Navigation user wrapper on mobile */
+            .nav-user-wrapper {
+                flex-direction: column;
+                width: 100%;
+                gap: 0;
+                align-items: stretch;
+            }
+            
+            .nav-user-wrapper > * {
+                width: 100%;
+            }
+            
+            .nav-user-wrapper .language-selector {
+                margin: 0.5rem 0;
+            }
+            
+            .nav-user-wrapper span {
+                padding: 1rem;
+                text-align: center;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            
+            .nav-user-wrapper button.login-btn {
+                margin: 0.5rem 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .dashboard-header {
+                padding: 70px 0 20px;
+            }
+            
+            .dashboard-header h1 {
+                font-size: 1.8rem !important;
+            }
+            
+            .dashboard-header p {
+                font-size: 0.95rem !important;
+            }
+            
+            .user-info-bar {
+                padding: 1rem;
+            }
+            
+            .user-info-bar h3 {
+                font-size: 1.1rem !important;
+            }
+            
+            .user-info-bar p {
+                font-size: 0.85rem !important;
+            }
+            
+            .driver-contact-section h3 {
+                font-size: 1.2rem !important;
+            }
+            
+            .driver-card h4 {
+                font-size: 1rem !important;
+            }
+            
+            .contact-driver-btn {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+            
+            .contact-driver-btn:last-child {
+                margin-bottom: 0;
+            }
         }
     </style>
 </head>
@@ -124,7 +244,7 @@
                     <a href="#home" class="nav-link" data-translate="home">Dashboard</a>
                     <a href="#services" class="nav-link" data-translate="services">Services</a>
                     <a href="#contact" class="nav-link">Contact</a>
-                    <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="nav-user-wrapper">
                         <!-- Language Selector -->
                         <div class="language-selector" style="position: relative;">
                             <button id="languageBtn" style="background: white; border: 1px solid #ddd; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
@@ -155,11 +275,11 @@
                         </button>
                     </div>
                 </div>
-                <div class="nav-toggle" id="nav-toggle">
+                <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Toggle navigation">
                     <span class="bar"></span>
                     <span class="bar"></span>
                     <span class="bar"></span>
-                </div>
+                </button>
             </div>
         </nav>
     </header>
@@ -841,5 +961,63 @@
     </script>
 
     <script src="js/main.js"></script>
+    <script src="js/chatbot.js"></script>
+    
+    <!-- Additional mobile menu and chatbot fix -->
+    <script>
+        // Ensure menu toggle works on mobile
+        (function() {
+            const toggle = document.getElementById('nav-toggle');
+            const menu = document.getElementById('nav-menu');
+            
+            if (toggle && menu) {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    menu.classList.toggle('active');
+                    toggle.classList.toggle('active');
+                }, true);
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+                        menu.classList.remove('active');
+                        toggle.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Ensure chatbot is visible
+            setTimeout(function() {
+                const chatbotContainer = document.getElementById('chatbot-container');
+                const chatbotButton = document.getElementById('chatbot-button');
+                const chatbotWindow = document.getElementById('chatbot-window');
+                
+                if (chatbotContainer) {
+                    console.log('Chatbot found and positioning...');
+                    chatbotContainer.style.position = 'fixed';
+                    chatbotContainer.style.bottom = '20px';
+                    chatbotContainer.style.right = '20px';
+                    chatbotContainer.style.zIndex = '9999';
+                    chatbotContainer.style.display = 'block';
+                    
+                    // Ensure button is visible
+                    if (chatbotButton) {
+                        chatbotButton.style.display = 'flex';
+                        console.log('Chatbot button made visible');
+                    }
+                    
+                    // Ensure window is hidden initially
+                    if (chatbotWindow) {
+                        chatbotWindow.style.display = 'none';
+                        chatbotWindow.classList.remove('active');
+                        console.log('Chatbot window hidden initially');
+                    }
+                } else {
+                    console.error('Chatbot container not found!');
+                }
+            }, 1000);
+        })();
+    </script>
 </body>
 </html>
